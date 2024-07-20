@@ -17,4 +17,13 @@ public final class Ports {
     public static final int FRONT_RIGHT_TURNING = 16;
     public static final int REAR_RIGHT_TURNING = 17;
   }
+
+  public static final class Intake {
+    public static final int LEFT_ROLLER = -1;
+    public static final int RIGHT_ROLLER = -1;
+    public static final int LEFT_SOLENOID = -1;
+    public static final int RIGHT_SOLENOID = -1;
+    public static final int LEFT_BEAM = -1;
+    public static final int RIGHT_BEAM = -1;
+  }
 }
