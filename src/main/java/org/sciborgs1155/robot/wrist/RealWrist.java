@@ -17,6 +17,7 @@ public class RealWrist implements WristIO {
     pivot = new TalonFX(PIVOT);
 
     TalonFXConfiguration toApply = new TalonFXConfiguration();
+    toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 50;
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 

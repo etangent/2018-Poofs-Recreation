@@ -1,10 +1,14 @@
 package org.sciborgs1155.robot.wrist;
 
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Second;
 
 import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Mass;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Velocity;
 
@@ -25,5 +29,8 @@ public class WristConstants {
     public static final double kA = 0;
     // reduction
     public static final double GEARING = 150;
+
+    public static final Measure<Distance> LENGTH = Meters.of(-1);
+    public static final Measure<Mass> MASS = Kilograms.of(-1);
   }
 }
