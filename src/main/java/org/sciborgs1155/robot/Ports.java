@@ -26,4 +26,17 @@ public final class Ports {
     public static final int LEFT_BEAM = -1;
     public static final int RIGHT_BEAM = -1;
   }
+
+  public static final class Wrist {
+    public static final int PIVOT = -1;
+    public static final int SWITCH = -1;
+  }
+
+  public static final class Elevator {
+    public static final int LEADER = -1;
+    public static final int FOLLOWER_1 = -1;
+    public static final int FOLLOWER_2 = -1;
+    public static final int FOLLOWER_3 = -1;
+    public static final int SHIFTER = -1;
+  }
 }

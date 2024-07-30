@@ -72,6 +72,16 @@ public interface InputStream extends DoubleSupplier {
   }
 
   /**
+   * Offsets the stream by a factor.
+   *
+   * @param factor A supplier of offset values.
+   * @return An offset stream.
+   */
+  public default InputStream add(DoubleSupplier offset) {
+    return map(x -> x + offset.getAsDouble());
+  }
+
+  /**
    * Raises the stream outputs to an exponent.
    *
    * @param exponent The exponent to raise them to.

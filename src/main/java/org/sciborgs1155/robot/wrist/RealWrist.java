@@ -34,6 +34,7 @@ public class RealWrist implements WristIO {
     pivot.setVoltage(voltage);
   }
 
+  // will ask about conversions
   @Override
   public double getPosition() {
     return pivot.getPosition().getValueAsDouble();
@@ -51,6 +52,6 @@ public class RealWrist implements WristIO {
 
   @Override
   public void resetEncoder() {
-      pivot.setPosition(0);
+    pivot.setPosition(0);
   }
 }

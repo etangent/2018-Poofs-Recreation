@@ -18,15 +18,17 @@ public class WristConstants {
       RadiansPerSecond.per(Second).of(-1);
   public static final Measure<Angle> MAX_ANGLE = Radians.of(-1);
   public static final Measure<Angle> MIN_ANGLE = Radians.of(-1);
+  public static final Measure<Angle> POSITION_TOLERANCE = Radians.of(-1);
+
+  public static final double kP = 0;
+  public static final double kI = 0;
+  public static final double kD = 0;
+  public static final double kS = 0;
+  public static final double kG = 0;
+  public static final double kV = 0;
+  public static final double kA = 0;
 
   public static class Pivot {
-    public static final double kP = 0;
-    public static final double kI = 0;
-    public static final double kD = 0;
-    public static final double kS = 0;
-    public static final double kG = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
     // reduction
     public static final double GEARING = 150;
 

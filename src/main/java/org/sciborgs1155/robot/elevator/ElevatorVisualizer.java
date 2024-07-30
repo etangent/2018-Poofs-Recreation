@@ -1,9 +1,8 @@
-package org.sciborgs1155.robot.wrist;
+package org.sciborgs1155.robot.elevator;
 
 import static edu.wpi.first.units.Units.Meters;
-import static org.sciborgs1155.robot.wrist.WristConstants.*;
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.*;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -11,17 +10,19 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class WristVisualizer implements Sendable {
-  private final Mechanism2d mech = new Mechanism2d(20, 20);
-  private final MechanismLigament2d wrist;
+public class ElevatorVisualizer implements Sendable {
+  private final Mechanism2d mech;
+  private final MechanismLigament2d elevator;
 
-  public WristVisualizer(Color8Bit color) {
+  public ElevatorVisualizer(Color8Bit color) {
+    mech = new Mechanism2d(50, 50);
     MechanismRoot2d chassis = mech.getRoot("Chassis", 0, 0);
-    wrist = chassis.append(new MechanismLigament2d("wrist", Pivot.LENGTH.in(Meters), 0, 4, color));
+    elevator =
+        chassis.append(new MechanismLigament2d("elevator", MIN_HEIGHT.in(Meters), 90, 5, color));
   }
 
-  public void setAngle(double radians) {
-    wrist.setAngle(Units.radiansToDegrees(radians));
+  public void setLength(double length) {
+    elevator.setLength(length);
   }
 
   @Override

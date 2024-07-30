@@ -12,9 +12,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
-
 import org.sciborgs1155.robot.Robot;
 
 public class Wrist extends SubsystemBase {
@@ -31,7 +32,10 @@ public class Wrist extends SubsystemBase {
   private final ProfiledPIDController pivotFeedback;
   private final ArmFeedforward pivotFeedforward;
 
+  @Log
   private final WristVisualizer setpointVisualizer;
+
+  @Log
   private final WristVisualizer measurementVisualizer;
 
   public Wrist(WristIO hardware) {
@@ -39,11 +43,8 @@ public class Wrist extends SubsystemBase {
 
     pivotFeedback =
         new ProfiledPIDController(
-            Pivot.kP,
-            Pivot.kI,
-            Pivot.kD,
-            new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
-    pivotFeedforward = new ArmFeedforward(Pivot.kS, Pivot.kG, Pivot.kV);
+            kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
+    pivotFeedforward = new ArmFeedforward(kS, kG, kV);
 
     setpointVisualizer = new WristVisualizer(new Color8Bit(Color.kBlue));
     measurementVisualizer = new WristVisualizer(new Color8Bit(Color.kBlue));
@@ -64,34 +65,45 @@ public class Wrist extends SubsystemBase {
     return hardware.getPosition();
   }
 
-  public Command goTo(double angle) {
-    double newAngle = MathUtil.clamp(angle, MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
+  @Log
+  public boolean atGoal() {
+    return pivotFeedback.atGoal();
+  }
 
-    return runOnce(() -> pivotFeedback.setGoal(newAngle))
-        .andThen(
-            run(
-                () -> {
-                  double prevVelocity = pivotFeedback.getSetpoint().velocity;
-                  double feedback = pivotFeedback.calculate(hardware.getPosition());
-                  double accel =
-                      (pivotFeedback.getSetpoint().velocity - prevVelocity) / PERIOD.in(Seconds);
-                  double feedforward =
-                      pivotFeedforward.calculate(
-                          pivotFeedback.getSetpoint().position,
-                          pivotFeedback.getSetpoint().velocity,
-                          accel);
+  public Command setGoal(double goal) {
+    return runOnce(() -> pivotFeedback.setGoal(goal));
+  }
 
-                  hardware.setVoltage(feedback + feedforward);
-                }));
+  public boolean atPosition(double position) {
+    return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANCE.in(Radians);
+  }
+
+  public Command goTo(DoubleSupplier angle) {
+    DoubleSupplier newAngle =
+        () -> MathUtil.clamp(angle.getAsDouble(), MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
+
+    return run(() -> {
+          double prevVelocity = pivotFeedback.getSetpoint().velocity;
+          double feedback = pivotFeedback.calculate(hardware.getPosition(), newAngle.getAsDouble());
+          double accel = (pivotFeedback.getSetpoint().velocity - prevVelocity) / PERIOD.in(Seconds);
+          double feedforward =
+              pivotFeedforward.calculate(
+                  pivotFeedback.getSetpoint().position,
+                  pivotFeedback.getSetpoint().velocity,
+                  accel);
+
+          hardware.setVoltage(feedback + feedforward);
+        })
+        .andThen(Commands.idle(this));
   }
 
   @Override
   public void periodic() {
-      if (hardware.atLimitSwitch()) {
-        hardware.resetEncoder();
-      }
+    if (hardware.atLimitSwitch()) {
+      hardware.resetEncoder();
+    }
 
-      setpointVisualizer.setAngle(setpoint());
-      measurementVisualizer.setAngle(measurement());
+    setpointVisualizer.setAngle(setpoint());
+    measurementVisualizer.setAngle(measurement());
   }
 }
