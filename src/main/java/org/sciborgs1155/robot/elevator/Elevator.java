@@ -123,6 +123,10 @@ public class Elevator extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+      if (hardware.atLimitSwitch()) {
+        hardware.zeroEncoders();
+      }
+
       setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
       measurementVisualizer.setLength(hardware.getPosition());
   }

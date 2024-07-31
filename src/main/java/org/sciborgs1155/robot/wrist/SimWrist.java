@@ -51,5 +51,5 @@ public class SimWrist implements WristIO {
 
   //obviously pointless; limit switch is never true here
   @Override
-  public void resetEncoder() {}
+  public void zeroEncoders() {}
 }

@@ -16,4 +16,12 @@ public class NoElevator implements ElevatorIO {
 
   @Override
   public void shiftGear(boolean high) {}
+
+  @Override
+  public boolean atLimitSwitch() {
+      return false;
+  }
+
+  @Override
+  public void zeroEncoders() {}
 }

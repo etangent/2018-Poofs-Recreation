@@ -102,7 +102,7 @@ public class Wrist extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     if (hardware.atLimitSwitch()) {
-      hardware.resetEncoder();
+      hardware.zeroEncoders();
     }
 
     setpointVisualizer.setAngle(setpoint());

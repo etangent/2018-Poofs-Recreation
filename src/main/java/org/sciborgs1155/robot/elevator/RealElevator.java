@@ -6,15 +6,18 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RealElevator implements ElevatorIO {
-  private final TalonFX leader = new TalonFX(LEADER);
-  private final TalonFX follower1 = new TalonFX(FOLLOWER_1);
-  private final TalonFX follower2 = new TalonFX(FOLLOWER_2);
-  private final TalonFX follower3 = new TalonFX(FOLLOWER_3);
+  private final TalonFX rightLeader = new TalonFX(LEADER);
+  private final TalonFX rightFollower = new TalonFX(RIGHT_FOLLOWER);
+  private final TalonFX leftFollower1 = new TalonFX(LEFT_FOLLOWER_1);
+  private final TalonFX leftFollower2 = new TalonFX(LEFT_FOLLOWER_2);
   private final Solenoid shifter = new Solenoid(PneumaticsModuleType.CTREPCM, SHIFTER);
+  private final DigitalInput limitSwitch = new DigitalInput(SWITCH);
 
   public RealElevator() {
     TalonFXConfiguration toApply = new TalonFXConfiguration();
@@ -22,14 +25,14 @@ public class RealElevator implements ElevatorIO {
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 30;
 
-    leader.getConfigurator().apply(toApply);
-    follower1.getConfigurator().apply(toApply);
-    follower2.getConfigurator().apply(toApply);
-    follower3.getConfigurator().apply(toApply);
+    rightLeader.getConfigurator().apply(toApply);
+    rightFollower.getConfigurator().apply(toApply);
+    leftFollower1.getConfigurator().apply(toApply);
+    leftFollower2.getConfigurator().apply(toApply);
 
-    follower1.setControl(new Follower(LEADER, false));
-    follower2.setControl(new Follower(LEADER, false));
-    follower3.setControl(new Follower(LEADER, false));
+    rightFollower.setControl(new Follower(LEADER, false));
+    leftFollower1.setControl(new Follower(LEADER, true));
+    leftFollower2.setControl(new Follower(LEADER, true));
 
     // start in high gear
     shifter.set(true);
@@ -37,21 +40,31 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public void setVoltage(double voltage) {
-    leader.setVoltage(voltage);
+    rightLeader.setVoltage(voltage);
   }
 
   @Override
   public double getPosition() {
-    return leader.getPosition().getValueAsDouble();
+    return rightLeader.getPosition().getValueAsDouble();
   }
 
   @Override
   public double getVelocity() {
-    return leader.getPosition().getValueAsDouble();
+    return rightLeader.getPosition().getValueAsDouble();
   }
 
   @Override
   public void shiftGear(boolean high) {
     shifter.set(high);
+  }
+
+  @Override
+  public boolean atLimitSwitch() {
+      return limitSwitch.get();
+  }
+
+  @Override
+  public void zeroEncoders() {
+      rightLeader.setPosition(0);
   }
 }

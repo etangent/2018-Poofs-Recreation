@@ -51,7 +51,7 @@ public class RealWrist implements WristIO {
   }
 
   @Override
-  public void resetEncoder() {
+  public void zeroEncoders() {
     pivot.setPosition(0);
   }
 }

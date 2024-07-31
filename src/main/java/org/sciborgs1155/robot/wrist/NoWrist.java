@@ -20,5 +20,5 @@ public class NoWrist implements WristIO {
   }
 
   @Override
-  public void resetEncoder() {}
+  public void zeroEncoders() {}
 }
