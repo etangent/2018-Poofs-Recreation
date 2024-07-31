@@ -9,16 +9,20 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
+import monologue.Logged;
+
 import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Constants;
 import org.sciborgs1155.robot.Robot;
 
-public class Elevator extends SubsystemBase {
+public class Elevator extends SubsystemBase implements Logged {
   public static Elevator create() {
     return Robot.isReal() ? new Elevator(new RealElevator()) : new Elevator(new SimElevator());
   }
@@ -32,6 +36,12 @@ public class Elevator extends SubsystemBase {
   private final ProfiledPIDController elevatorFeedback;
   private final ElevatorFeedforward elevatorFeedforward;
 
+  @Log
+  private final ElevatorVisualizer setPointVisualizer;
+
+  @Log
+  private final ElevatorVisualizer measurementVisualizer;
+
   public Elevator(ElevatorIO hardware) {
     this.hardware = hardware;
 
@@ -39,6 +49,9 @@ public class Elevator extends SubsystemBase {
         new ProfiledPIDController(
             kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
     elevatorFeedforward = new ElevatorFeedforward(kS, kG, kV, kA);
+
+    setPointVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kBlue));
+    measurementVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kRed));
   }
 
   @Log
@@ -106,5 +119,11 @@ public class Elevator extends SubsystemBase {
           hardware.setVoltage(feedback + feedforward);
         })
         .andThen(Commands.idle(this));
+  }
+
+  @Override
+  public void periodic() {
+      setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
+      measurementVisualizer.setLength(hardware.getPosition());
   }
 }
