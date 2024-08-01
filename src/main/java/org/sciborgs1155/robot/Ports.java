@@ -40,4 +40,12 @@ public final class Ports {
     public static final int SHIFTER = -1;
     public static final int SWITCH = -1;
   }
+
+  public static final class Forklift {
+    public static final int DEPLOYER = -1;
+  }
+
+  public static final class Hanger {
+    public static final int DEPLOYER = -1;
+  }
 }
