@@ -49,7 +49,7 @@ public class SimWrist implements WristIO {
     return false;
   }
 
-  //obviously pointless; limit switch is never true here
+  // obviously pointless; limit switch is never true here
   @Override
   public void zeroEncoders() {}
 }

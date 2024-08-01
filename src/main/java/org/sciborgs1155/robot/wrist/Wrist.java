@@ -15,9 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
-
-import monologue.Logged;
 import monologue.Annotations.Log;
+import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
 
 public class Wrist extends SubsystemBase implements Logged {
@@ -34,11 +33,9 @@ public class Wrist extends SubsystemBase implements Logged {
   private final ProfiledPIDController pivotFeedback;
   private final ArmFeedforward pivotFeedforward;
 
-  @Log
-  private final WristVisualizer setpointVisualizer;
+  @Log private final WristVisualizer setpointVisualizer;
 
-  @Log
-  private final WristVisualizer measurementVisualizer;
+  @Log private final WristVisualizer measurementVisualizer;
 
   public Wrist(WristIO hardware) {
     this.hardware = hardware;

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
-
 import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Constants;
 import org.sciborgs1155.robot.Robot;
@@ -36,11 +35,9 @@ public class Elevator extends SubsystemBase implements Logged {
   private final ProfiledPIDController elevatorFeedback;
   private final ElevatorFeedforward elevatorFeedforward;
 
-  @Log
-  private final ElevatorVisualizer setPointVisualizer;
+  @Log private final ElevatorVisualizer setPointVisualizer;
 
-  @Log
-  private final ElevatorVisualizer measurementVisualizer;
+  @Log private final ElevatorVisualizer measurementVisualizer;
 
   public Elevator(ElevatorIO hardware) {
     this.hardware = hardware;
@@ -123,11 +120,11 @@ public class Elevator extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-      if (hardware.atLimitSwitch()) {
-        hardware.zeroEncoders();
-      }
+    if (hardware.atLimitSwitch()) {
+      hardware.zeroEncoders();
+    }
 
-      setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
-      measurementVisualizer.setLength(hardware.getPosition());
+    setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
+    measurementVisualizer.setLength(hardware.getPosition());
   }
 }

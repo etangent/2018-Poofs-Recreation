@@ -48,10 +48,10 @@ public class SimElevator implements ElevatorIO {
 
   @Override
   public boolean atLimitSwitch() {
-      return false;
+    return false;
   }
 
-  //unnecessary
+  // unnecessary
   @Override
   public void zeroEncoders() {}
 }
