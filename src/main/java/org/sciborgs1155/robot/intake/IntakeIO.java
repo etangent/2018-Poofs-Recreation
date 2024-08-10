@@ -2,6 +2,11 @@ package org.sciborgs1155.robot.intake;
 
 public interface IntakeIO {
   public void setRollerPower(double power);
+  
+  /*
+   * rotationsPerSecond
+   */
+  public double getVelocity();
 
   /**
    * @param clamp true means it clamps

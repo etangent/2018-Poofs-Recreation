@@ -8,11 +8,12 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import monologue.Logged;
 import monologue.Annotations.Log;
 import org.sciborgs1155.robot.Robot;
 import org.sciborgs1155.robot.intake.IntakeIO.ClampState;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements Logged {
   public static Intake create() {
     return Robot.isReal() ? new Intake(new RealIntake()) : none();
   }
@@ -28,11 +29,11 @@ public class Intake extends SubsystemBase {
   }
 
   public Command intakeAndKeep() {
-    return forward().until(hardware::hasCube).andThen(clamp()).withName("intaking and keeping");
+    return forward().until(this::hasCube).andThen(clamp()).withName("intaking and keeping");
   }
 
   public Command drop() {
-    return open().until(() -> !hardware.hasCube());
+    return open().until(() -> !hasCube());
   }
 
   // I may do more stuff with this
@@ -76,8 +77,18 @@ public class Intake extends SubsystemBase {
     return toggleClamp(OPEN).withName("opening");
   }
 
-  @Log
+  @Log.NT
   public boolean stalling() {
     return hardware.rollerCurrent() > DCMotor.getVex775Pro(2).stallCurrentAmps;
+  }
+
+  @Log.NT
+  public double rollerVelocity() {
+    return hardware.getVelocity();
+  }
+
+  @Log.NT
+  public boolean hasCube() {
+    return hardware.hasCube();
   }
 }

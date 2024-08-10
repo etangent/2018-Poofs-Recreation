@@ -16,13 +16,13 @@ public class ElevatorVisualizer implements Sendable {
 
   public ElevatorVisualizer(Color8Bit color) {
     mech = new Mechanism2d(50, 50);
-    MechanismRoot2d chassis = mech.getRoot("Chassis", 0, 0);
+    MechanismRoot2d chassis = mech.getRoot("Chassis", 10, 10);
     elevator =
-        chassis.append(new MechanismLigament2d("elevator", MIN_HEIGHT.in(Meters), 90, 5, color));
+        chassis.append(new MechanismLigament2d("elevator", 10 * HEIGHT_FROM_GROUND.in(Meters), 90, 5, color));
   }
 
   public void setLength(double length) {
-    elevator.setLength(length);
+    elevator.setLength((length + HEIGHT_FROM_GROUND.in(Meters)) * 10);
   }
 
   @Override

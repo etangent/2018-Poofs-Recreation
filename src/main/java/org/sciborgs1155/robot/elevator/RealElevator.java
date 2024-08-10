@@ -1,12 +1,13 @@
 package org.sciborgs1155.robot.elevator;
 
+import static edu.wpi.first.units.Units.Meters;
 import static org.sciborgs1155.robot.Ports.Elevator.*;
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.Elevator.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -19,11 +20,18 @@ public class RealElevator implements ElevatorIO {
   private final Solenoid shifter = new Solenoid(PneumaticsModuleType.CTREPCM, SHIFTER);
   private final DigitalInput limitSwitch = new DigitalInput(SWITCH);
 
+
   public RealElevator() {
     TalonFXConfiguration toApply = new TalonFXConfiguration();
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 30;
+    /*
+     * I'm fairly sure that this encoder is attached in a way that 
+     * I don't have to care about gearing/gear shifting (it's on the shifter shaft)
+     */
+    toApply.Feedback.FeedbackRemoteSensorID = REMOTE_ENCODER;
+    toApply.Feedback.SensorToMechanismRatio = 2 * Math.PI * DRUM_RADIUS.in(Meters);
 
     rightLeader.getConfigurator().apply(toApply);
     rightFollower.getConfigurator().apply(toApply);
@@ -50,7 +58,7 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public double getVelocity() {
-    return rightLeader.getPosition().getValueAsDouble();
+    return rightLeader.getVelocity().getValueAsDouble();
   }
 
   @Override
@@ -60,11 +68,11 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public boolean atLimitSwitch() {
-      return limitSwitch.get();
+    return limitSwitch.get();
   }
 
   @Override
   public void zeroEncoders() {
-      rightLeader.setPosition(0);
+    rightLeader.setPosition(0);
   }
 }

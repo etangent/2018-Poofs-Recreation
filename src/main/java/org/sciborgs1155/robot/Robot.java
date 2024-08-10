@@ -1,5 +1,6 @@
 package org.sciborgs1155.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.wpilibj2.command.button.RobotModeTriggers.*;
 
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -10,12 +11,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import monologue.Monologue;
+
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
+
 import org.littletonrobotics.urcl.URCL;
 import org.sciborgs1155.lib.CommandRobot;
 import org.sciborgs1155.lib.FaultLogger;
 import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Ports.OI;
 import org.sciborgs1155.robot.commands.Autos;
+import org.sciborgs1155.robot.drive.Drive;
+import org.sciborgs1155.robot.elevator.Elevator;
+import org.sciborgs1155.robot.forklift.Forklift;
+import org.sciborgs1155.robot.hanger.Hanger;
+import org.sciborgs1155.robot.intake.Intake;
+import org.sciborgs1155.robot.wrist.Wrist;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,6 +40,12 @@ public class Robot extends CommandRobot implements Logged {
   private final CommandXboxController driver = new CommandXboxController(OI.DRIVER);
 
   // SUBSYSTEMS
+  private final Drive drive = Drive.create();
+  private final Elevator elevator = Elevator.create();
+  private final Wrist wrist = Wrist.create();
+  private final Intake intake = Intake.create();
+  private final Forklift forklift = Forklift.create();
+  private final Hanger hanger = Hanger.create();
 
   // COMMANDS
   @Log.NT private final Autos autos = new Autos();
@@ -75,7 +91,9 @@ public class Robot extends CommandRobot implements Logged {
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {
-    autonomous().whileTrue(new ProxyCommand(autos::get));
+    //autonomous().whileTrue(new ProxyCommand(autos::get));
     FaultLogger.onFailing(f -> Commands.print(f.toString()));
+    operator.b().onTrue(wrist.goTo(() -> Math.PI/8).alongWith(elevator.goTo(() -> MAX_HEIGHT.in(Meters) / 2)));
+    operator.a().onTrue(wrist.goTo(() -> Math.PI/1.5).alongWith(elevator.goTo(() -> 0)));
   }
 }

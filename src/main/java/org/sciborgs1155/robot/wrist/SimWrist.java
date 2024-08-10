@@ -31,7 +31,7 @@ public class SimWrist implements WristIO {
   @Override
   public void setVoltage(double voltage) {
     pivot.setInputVoltage(voltage);
-    pivot.update(Constants.PERIOD.in(Seconds));
+    pivot.update(Constants.PERIOD.in(Seconds));    
   }
 
   @Override
@@ -49,7 +49,7 @@ public class SimWrist implements WristIO {
     return false;
   }
 
-  //obviously pointless; limit switch is never true here
+  // obviously pointless; limit switch is never true here
   @Override
   public void zeroEncoders() {}
 }
