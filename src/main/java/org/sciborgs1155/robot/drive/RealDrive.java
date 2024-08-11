@@ -2,26 +2,24 @@ package org.sciborgs1155.robot.drive;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.Rotations;
 import static org.sciborgs1155.robot.Ports.Drive.*;
-import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.HIGH_GEARING;
-import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.LOW_GEARING;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.WHEEL_RADIUS;
 
 import java.util.Arrays;
 
 public class RealDrive implements DriveIO {
     private final TalonFX leftLeader, rightLeader, leftFollower1, rightFollower1, leftFollower2, rightFollower2;
+    private final Pigeon2 gyro = new Pigeon2(GYRO);
     private final Solenoid shifter;
-    private double currentGearing;
 
     public RealDrive() {
         leftLeader = new TalonFX(LEFT_LEADER);
@@ -44,11 +42,9 @@ public class RealDrive implements DriveIO {
         rightFollower2.setControl(new Follower(RIGHT_LEADER, false));
         leftFollower1.setControl(new Follower(LEFT_LEADER, false));
         leftFollower2.setControl(new Follower(LEFT_LEADER, false));
-
         
         shifter = new Solenoid(PneumaticsModuleType.CTREPCM, SHIFTER);
         shifter.set(true);
-        currentGearing = HIGH_GEARING;
     }
 
     @Override
@@ -57,19 +53,39 @@ public class RealDrive implements DriveIO {
         rightLeader.setVoltage(rightVoltage);
     }
 
+    /*
+     * I cannot find how 254 accounts for gearing
+     * (see getLeftEnoderDistance())
+     * so neither will I cause it's too hard
+     * cry about it
+     */
+    @Override
+    public double getLeftPosition() {
+        return leftLeader.getPosition().getValueAsDouble() * WHEEL_RADIUS.in(Meters) * 2 * Math.PI;
+    }
+
+    @Override
+    public double getRightPosition() {
+        return rightLeader.getPosition().getValueAsDouble() * WHEEL_RADIUS.in(Meters) * 2 * Math.PI;
+    }
+
     @Override
     public double getRightVelocity() {
-        return rightLeader.getVelocity().getValueAsDouble() * Rotations.of(currentGearing).in(Radians) * WHEEL_RADIUS.in(Meters);
+        return rightLeader.getVelocity().getValueAsDouble() * WHEEL_RADIUS.in(Meters) * 2 * Math.PI;
     }
 
     @Override
     public double getLeftVelocity() {
-        return leftLeader.getVelocity().getValueAsDouble() * Rotations.of(currentGearing).in(Radians) * WHEEL_RADIUS.in(Meters);
+        return leftLeader.getVelocity().getValueAsDouble() * WHEEL_RADIUS.in(Meters) * 2 * Math.PI;
+    }
+
+    @Override
+    public Rotation2d getHeading() {
+        return gyro.getRotation2d();
     }
 
     @Override
     public void shiftGears(boolean high) {
         shifter.set(high);
-        currentGearing = high == true ? HIGH_GEARING : LOW_GEARING;
     }
 }

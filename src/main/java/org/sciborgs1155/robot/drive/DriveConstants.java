@@ -2,21 +2,31 @@ package org.sciborgs1155.robot.drive;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N7;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Mass;
 import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
 
 public class DriveConstants {
-    public static final double kP = 0;
-    public static final double kI = 0;
+    public static final Pose2d INITIAL_POSE = new Pose2d(1, 3, new Rotation2d());
+    public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(2);
+    public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCEL = MetersPerSecondPerSecond.of(4);
+    public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.5);
+
+    public static final double kP = 3;
+    public static final double kI = .3;
     public static final double kD = 0;
-    public static final double kS = 0;
-    public static final double kV = 0;
+    public static final double kS = 2;
+    public static final double kV = 1;
     public static final double kA = 0;
 
     public static class Drivetrain {

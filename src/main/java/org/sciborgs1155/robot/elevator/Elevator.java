@@ -47,6 +47,8 @@ public class Elevator extends SubsystemBase implements Logged {
             kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
     elevatorFeedforward = new ElevatorFeedforward(kS, kG, kV, kA);
 
+    elevatorFeedback.setTolerance(POSITION_TOLERANCE.in(Meters));
+
     setPointVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kBlue));
     measurementVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kRed));
   }
@@ -81,7 +83,7 @@ public class Elevator extends SubsystemBase implements Logged {
   }
 
   public boolean atPosition(double position) {
-    return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANE.in(Meters);
+    return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANCE.in(Meters);
   }
 
   /** pulls up onto climbing area */

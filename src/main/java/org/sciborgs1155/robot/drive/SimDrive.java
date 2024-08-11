@@ -2,6 +2,7 @@ package org.sciborgs1155.robot.drive;
 
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Seconds;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.DRIVE_MASS;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.HIGH_GEARING;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.LOW_GEARING;
@@ -10,6 +11,9 @@ import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.STD_DEVS;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.TRACK_WIDTH;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.WHEEL_RADIUS;
 
+import org.sciborgs1155.robot.Constants;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
@@ -23,6 +27,17 @@ public class SimDrive implements DriveIO {
     @Override
     public void setVoltages(double leftVoltage, double rightVoltage) {
         drive.setInputs(leftVoltage, rightVoltage);
+        drive.update(Constants.PERIOD.in(Seconds));
+    }
+
+    @Override
+    public double getLeftPosition() {
+        return drive.getLeftPositionMeters();
+    }
+
+    @Override
+    public double getRightPosition() {
+        return drive.getRightPositionMeters();
     }
 
     @Override
@@ -33,6 +48,11 @@ public class SimDrive implements DriveIO {
     @Override
     public double getRightVelocity() {
         return drive.getRightVelocityMetersPerSecond();
+    }
+
+    @Override
+    public Rotation2d getHeading() {
+        return drive.getHeading();
     }
 
     @Override

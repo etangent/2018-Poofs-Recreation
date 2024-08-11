@@ -26,7 +26,7 @@ public class ElevatorConstants {
   //
   public static final Measure<Distance> MAX_HEIGHT = Meters.of(2);
   //
-  public static final Measure<Distance> POSITION_TOLERANE = Meters.of(.1);
+  public static final Measure<Distance> POSITION_TOLERANCE = Meters.of(.1);
   public static final Measure<Velocity<Distance>> MAX_MANUAL_VELOCITY = MAX_VELOCITY.divide(4);
 
   public static final double kP = 10;

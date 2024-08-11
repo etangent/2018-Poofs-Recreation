@@ -49,16 +49,6 @@
         "window": {
           "visible": true
         }
-      },
-      "/Robot/elevator/measurementVisualizer": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/Robot/elevator/setPointVisualizer": {
-        "window": {
-          "visible": true
-        }
       }
     }
   },
@@ -71,6 +61,11 @@
               "open": true
             },
             "open": true
+          },
+          "Pose2d##v_/Robot/drive/pose": {
+            "Translation2d##v_translation": {
+              "open": true
+            }
           },
           "frontRight": {
             "SwerveModulePosition##v_/Robot/drive/frontRight/position": {
@@ -92,6 +87,9 @@
         "open": true
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   },
   "Plot": {
     "Plot <0>": {
@@ -162,7 +160,47 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "name": "elevator",
+        "visible": false
+      }
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 328,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Robot/drive/leftVelocityMeasurement"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Robot/drive/leftVelocitySetpoint"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "name": "dri"
+      }
     }
   }
 }

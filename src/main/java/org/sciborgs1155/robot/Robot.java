@@ -1,6 +1,8 @@
 package org.sciborgs1155.robot;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.wpilibj2.command.button.RobotModeTriggers.*;
 
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -12,6 +14,7 @@ import monologue.Annotations.Log;
 import monologue.Logged;
 import monologue.Monologue;
 
+import static org.sciborgs1155.robot.drive.DriveConstants.MAX_ACCEL;
 import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 
 import org.littletonrobotics.urcl.URCL;
@@ -21,6 +24,7 @@ import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Ports.OI;
 import org.sciborgs1155.robot.commands.Autos;
 import org.sciborgs1155.robot.drive.Drive;
+import org.sciborgs1155.robot.drive.DriveConstants;
 import org.sciborgs1155.robot.elevator.Elevator;
 import org.sciborgs1155.robot.forklift.Forklift;
 import org.sciborgs1155.robot.hanger.Hanger;
@@ -87,7 +91,10 @@ public class Robot extends CommandRobot implements Logged {
    * Configures subsystem default commands. Default commands are scheduled when no other command is
    * running on a subsystem.
    */
-  private void configureSubsystemDefaults() {}
+  private void configureSubsystemDefaults() {
+    drive.setDefaultCommand(drive.drive(createJoystickStream(driver::getLeftY, DriveConstants.MAX_SPEED.in(MetersPerSecond), MAX_ACCEL.in(MetersPerSecondPerSecond)), createJoystickStream(InputStream.of(driver::getRightY).negate(), DriveConstants.MAX_SPEED.in(MetersPerSecond), MAX_ACCEL.in(MetersPerSecondPerSecond))));
+    //drive.setDefaultCommand(drive.drive(InputStream.of(() -> DriveConstants.MAX_SPEED.in(MetersPerSecond)), InputStream.of(() -> DriveConstants.MAX_SPEED.in(MetersPerSecond))));
+  }
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {

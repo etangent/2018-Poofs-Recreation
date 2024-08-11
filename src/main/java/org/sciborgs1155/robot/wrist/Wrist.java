@@ -1,5 +1,6 @@
 package org.sciborgs1155.robot.wrist;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Seconds;
 import static org.sciborgs1155.robot.Constants.*;
@@ -44,6 +45,8 @@ public class Wrist extends SubsystemBase implements Logged {
         new ProfiledPIDController(
             kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
     pivotFeedforward = new ArmFeedforward(kS, kG, kV);
+
+    pivotFeedback.setTolerance(POSITION_TOLERANCE.in(Radians));
   }
 
   @Log.NT
