@@ -125,7 +125,12 @@ public class Elevator extends SubsystemBase implements Logged {
     if (hardware.atLimitSwitch()) {
       hardware.zeroEncoders();
     }
+    if (hardware.atLimitSwitch()) {
+      hardware.zeroEncoders();
+    }
 
+    setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
+    measurementVisualizer.setLength(hardware.getPosition());
     setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
     measurementVisualizer.setLength(hardware.getPosition());
   }

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
+import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
 
 public class Wrist extends SubsystemBase implements Logged {
