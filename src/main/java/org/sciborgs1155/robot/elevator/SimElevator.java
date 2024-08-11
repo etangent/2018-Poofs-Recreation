@@ -17,10 +17,10 @@ public class SimElevator implements ElevatorIO {
     elevator =
         new ElevatorSim(
             DCMotor.getVex775Pro(4),
-            Elevator.LOW_GEARING,
+            Elevator.HIGH_GEARING,
             Elevator.CARRIAGE_MASS.in(Kilograms),
             Elevator.DRUM_RADIUS.in(Meters),
-            MIN_HEIGHT.in(Meters),
+            0,
             MAX_HEIGHT.in(Meters),
             true,
             0);

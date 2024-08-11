@@ -12,7 +12,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
@@ -35,9 +34,9 @@ public class Elevator extends SubsystemBase implements Logged {
   private final ProfiledPIDController elevatorFeedback;
   private final ElevatorFeedforward elevatorFeedforward;
 
-  @Log private final ElevatorVisualizer setPointVisualizer;
+  @Log.NT private final ElevatorVisualizer setPointVisualizer;
 
-  @Log private final ElevatorVisualizer measurementVisualizer;
+  @Log.NT private final ElevatorVisualizer measurementVisualizer;
 
   public Elevator(ElevatorIO hardware) {
     this.hardware = hardware;
@@ -47,26 +46,28 @@ public class Elevator extends SubsystemBase implements Logged {
             kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
     elevatorFeedforward = new ElevatorFeedforward(kS, kG, kV, kA);
 
+    elevatorFeedback.setTolerance(POSITION_TOLERANCE.in(Meters));
+
     setPointVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kBlue));
     measurementVisualizer = new ElevatorVisualizer(new Color8Bit(Color.kRed));
   }
 
-  @Log
+  @Log.NT
   public double goal() {
     return elevatorFeedback.getGoal().position;
   }
 
-  @Log
+  @Log.NT
   public double setpoint() {
     return elevatorFeedback.getSetpoint().position;
   }
 
-  @Log
+  @Log.NT
   public double measurement() {
     return hardware.getPosition();
   }
 
-  @Log
+  @Log.NT
   public boolean atGoal() {
     return elevatorFeedback.atGoal();
   }
@@ -75,18 +76,19 @@ public class Elevator extends SubsystemBase implements Logged {
     return runOnce(() -> elevatorFeedback.setGoal(goal));
   }
 
-  public boolean atPosition(double position) {
-    return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANE.in(Meters);
-  }
-
+  @Log.NT
   public boolean atMaxHeight() {
     return atPosition(MAX_HEIGHT.in(Meters));
+  }
+
+  public boolean atPosition(double position) {
+    return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANCE.in(Meters);
   }
 
   /** pulls up onto climbing area */
   public Command pullUp() {
     return runOnce(() -> hardware.shiftGear(false))
-        .andThen(goTo(() -> MIN_HEIGHT.in(Meters)))
+        .andThen(goTo(() -> 0))
         .onlyIf(this::atMaxHeight);
   }
 
@@ -101,9 +103,10 @@ public class Elevator extends SubsystemBase implements Logged {
 
   public Command goTo(DoubleSupplier position) {
     DoubleSupplier newPosition =
-        () -> MathUtil.clamp(position.getAsDouble(), MIN_HEIGHT.in(Meters), MAX_HEIGHT.in(Meters));
+        () -> MathUtil.clamp(position.getAsDouble(), 0, MAX_HEIGHT.in(Meters));
 
-    return run(() -> {
+    return run(
+        () -> {
           double prevVelocity = elevatorFeedback.getSetpoint().velocity;
           double feedback =
               elevatorFeedback.calculate(hardware.getPosition(), newPosition.getAsDouble());
@@ -114,8 +117,7 @@ public class Elevator extends SubsystemBase implements Logged {
               elevatorFeedforward.calculate(elevatorFeedback.getSetpoint().velocity, accel);
 
           hardware.setVoltage(feedback + feedforward);
-        })
-        .andThen(Commands.idle(this));
+        });
   }
 
   @Override
@@ -123,7 +125,12 @@ public class Elevator extends SubsystemBase implements Logged {
     if (hardware.atLimitSwitch()) {
       hardware.zeroEncoders();
     }
+    if (hardware.atLimitSwitch()) {
+      hardware.zeroEncoders();
+    }
 
+    setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
+    measurementVisualizer.setLength(hardware.getPosition());
     setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
     measurementVisualizer.setLength(hardware.getPosition());
   }

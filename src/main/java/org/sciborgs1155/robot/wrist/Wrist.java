@@ -33,9 +33,13 @@ public class Wrist extends SubsystemBase implements Logged {
   private final ProfiledPIDController pivotFeedback;
   private final ArmFeedforward pivotFeedforward;
 
-  @Log private final WristVisualizer setpointVisualizer;
+  @Log.NT
+  private final WristVisualizer setpointVisualizer =
+      new WristVisualizer(new Color8Bit(Color.kBlue));
 
-  @Log private final WristVisualizer measurementVisualizer;
+  @Log.NT
+  private final WristVisualizer measurementVisualizer =
+      new WristVisualizer(new Color8Bit(Color.kRed));
 
   public Wrist(WristIO hardware) {
     this.hardware = hardware;
@@ -45,26 +49,25 @@ public class Wrist extends SubsystemBase implements Logged {
             kP, kI, kD, new TrapezoidProfile.Constraints(MAX_VELOCITY, MAX_ACCELERATION));
     pivotFeedforward = new ArmFeedforward(kS, kG, kV);
 
-    setpointVisualizer = new WristVisualizer(new Color8Bit(Color.kBlue));
-    measurementVisualizer = new WristVisualizer(new Color8Bit(Color.kBlue));
+    pivotFeedback.setTolerance(POSITION_TOLERANCE.in(Radians));
   }
 
-  @Log
+  @Log.NT
   public double goal() {
     return pivotFeedback.getGoal().position;
   }
 
-  @Log
+  @Log.NT
   public double setpoint() {
     return pivotFeedback.getSetpoint().position;
   }
 
-  @Log
+  @Log.NT
   public double measurement() {
     return hardware.getPosition();
   }
 
-  @Log
+  @Log.NT
   public boolean atGoal() {
     return pivotFeedback.atGoal();
   }

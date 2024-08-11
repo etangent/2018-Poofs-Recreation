@@ -8,7 +8,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class RealWrist implements WristIO {
-  // 254 used a CANifier for their encoder (among other things) and I'm not doing that
   private final TalonFX pivot;
   private final DigitalInput limitSwitch;
 
@@ -20,6 +19,9 @@ public class RealWrist implements WristIO {
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 50;
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    // on pivot shaft so no gearing to worry about
+    toApply.Feedback.FeedbackRemoteSensorID = REMOTE_ENCODER;
+    toApply.Feedback.SensorToMechanismRatio = 2 * Math.PI;
 
     pivot.getConfigurator().apply(toApply);
 
@@ -34,7 +36,6 @@ public class RealWrist implements WristIO {
     pivot.setVoltage(voltage);
   }
 
-  // will ask about conversions
   @Override
   public double getPosition() {
     return pivot.getPosition().getValueAsDouble();

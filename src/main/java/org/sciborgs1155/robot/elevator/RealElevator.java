@@ -1,6 +1,8 @@
 package org.sciborgs1155.robot.elevator;
 
+import static edu.wpi.first.units.Units.Meters;
 import static org.sciborgs1155.robot.Ports.Elevator.*;
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.Elevator.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -23,6 +25,12 @@ public class RealElevator implements ElevatorIO {
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 30;
+    /*
+     * I'm fairly sure that this encoder is attached in a way that
+     * I don't have to care about gearing/gear shifting (it's on the shifter shaft)
+     */
+    toApply.Feedback.FeedbackRemoteSensorID = REMOTE_ENCODER;
+    toApply.Feedback.SensorToMechanismRatio = 2 * Math.PI * DRUM_RADIUS.in(Meters);
 
     rightLeader.getConfigurator().apply(toApply);
     rightFollower.getConfigurator().apply(toApply);
@@ -49,7 +57,7 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public double getVelocity() {
-    return rightLeader.getPosition().getValueAsDouble();
+    return rightLeader.getVelocity().getValueAsDouble();
   }
 
   @Override

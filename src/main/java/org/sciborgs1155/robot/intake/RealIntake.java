@@ -54,6 +54,11 @@ public class RealIntake implements IntakeIO {
   }
 
   @Override
+  public double getVelocity() {
+    return leftRoller.getVelocity().getValueAsDouble();
+  }
+
+  @Override
   public void setClamp(ClampState clamp) {
     leftSolenoid.set(clamp.getLeft());
     rightSolenoid.set(clamp.getRight());

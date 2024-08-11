@@ -5,6 +5,11 @@ public class NoIntake implements IntakeIO {
   public void setRollerPower(double power) {}
 
   @Override
+  public double getVelocity() {
+    return 0;
+  }
+
+  @Override
   public void setClamp(ClampState clamp) {}
 
   @Override
