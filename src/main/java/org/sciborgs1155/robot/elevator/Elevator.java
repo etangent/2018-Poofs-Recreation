@@ -12,7 +12,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
@@ -106,7 +105,8 @@ public class Elevator extends SubsystemBase implements Logged {
     DoubleSupplier newPosition =
         () -> MathUtil.clamp(position.getAsDouble(), 0, MAX_HEIGHT.in(Meters));
 
-    return run(() -> {
+    return run(
+        () -> {
           double prevVelocity = elevatorFeedback.getSetpoint().velocity;
           double feedback =
               elevatorFeedback.calculate(hardware.getPosition(), newPosition.getAsDouble());

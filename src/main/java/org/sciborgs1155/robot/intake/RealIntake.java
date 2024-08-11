@@ -55,7 +55,7 @@ public class RealIntake implements IntakeIO {
 
   @Override
   public double getVelocity() {
-      return leftRoller.getVelocity().getValueAsDouble();
+    return leftRoller.getVelocity().getValueAsDouble();
   }
 
   @Override

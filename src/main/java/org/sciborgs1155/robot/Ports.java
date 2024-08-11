@@ -46,7 +46,7 @@ public final class Ports {
     public static final int RIGHT_FOLLOWER_1 = -1;
     public static final int LEFT_FOLLOWER_2 = -1;
     public static final int RIGHT_FOLLOWER_2 = -1;
-    public static final int GYRO= -1;
+    public static final int GYRO = -1;
     public static final int SHIFTER = -1;
   }
 }

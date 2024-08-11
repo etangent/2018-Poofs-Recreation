@@ -4,19 +4,16 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.wpilibj2.command.button.RobotModeTriggers.*;
+import static org.sciborgs1155.robot.drive.DriveConstants.MAX_ACCEL;
+import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import monologue.Monologue;
-
-import static org.sciborgs1155.robot.drive.DriveConstants.MAX_ACCEL;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
-
 import org.littletonrobotics.urcl.URCL;
 import org.sciborgs1155.lib.CommandRobot;
 import org.sciborgs1155.lib.FaultLogger;
@@ -92,15 +89,31 @@ public class Robot extends CommandRobot implements Logged {
    * running on a subsystem.
    */
   private void configureSubsystemDefaults() {
-    drive.setDefaultCommand(drive.drive(createJoystickStream(driver::getLeftY, DriveConstants.MAX_SPEED.in(MetersPerSecond), MAX_ACCEL.in(MetersPerSecondPerSecond)), createJoystickStream(InputStream.of(driver::getRightY).negate(), DriveConstants.MAX_SPEED.in(MetersPerSecond), MAX_ACCEL.in(MetersPerSecondPerSecond))));
-    //drive.setDefaultCommand(drive.drive(InputStream.of(() -> DriveConstants.MAX_SPEED.in(MetersPerSecond)), InputStream.of(() -> DriveConstants.MAX_SPEED.in(MetersPerSecond))));
+    drive.setDefaultCommand(
+        drive.drive(
+            createJoystickStream(
+                driver::getLeftY,
+                DriveConstants.MAX_SPEED.in(MetersPerSecond),
+                MAX_ACCEL.in(MetersPerSecondPerSecond)),
+            createJoystickStream(
+                InputStream.of(driver::getRightY).negate(),
+                DriveConstants.MAX_SPEED.in(MetersPerSecond),
+                MAX_ACCEL.in(MetersPerSecondPerSecond))));
+    // drive.setDefaultCommand(drive.drive(InputStream.of(() ->
+    // DriveConstants.MAX_SPEED.in(MetersPerSecond)), InputStream.of(() ->
+    // DriveConstants.MAX_SPEED.in(MetersPerSecond))));
   }
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {
-    //autonomous().whileTrue(new ProxyCommand(autos::get));
+    // autonomous().whileTrue(new ProxyCommand(autos::get));
     FaultLogger.onFailing(f -> Commands.print(f.toString()));
-    operator.b().onTrue(wrist.goTo(() -> Math.PI/8).alongWith(elevator.goTo(() -> MAX_HEIGHT.in(Meters) / 2)));
-    operator.a().onTrue(wrist.goTo(() -> Math.PI/1.5).alongWith(elevator.goTo(() -> 0)));
+    operator
+        .b()
+        .onTrue(
+            wrist
+                .goTo(() -> Math.PI / 8)
+                .alongWith(elevator.goTo(() -> MAX_HEIGHT.in(Meters) / 2)));
+    operator.a().onTrue(wrist.goTo(() -> Math.PI / 1.5).alongWith(elevator.goTo(() -> 0)));
   }
 }

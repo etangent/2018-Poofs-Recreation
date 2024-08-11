@@ -19,7 +19,7 @@ public class RealWrist implements WristIO {
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 50;
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    //on pivot shaft so no gearing to worry about
+    // on pivot shaft so no gearing to worry about
     toApply.Feedback.FeedbackRemoteSensorID = REMOTE_ENCODER;
     toApply.Feedback.SensorToMechanismRatio = 2 * Math.PI;
 

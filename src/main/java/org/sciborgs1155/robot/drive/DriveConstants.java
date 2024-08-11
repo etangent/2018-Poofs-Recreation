@@ -17,26 +17,27 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Velocity;
 
 public class DriveConstants {
-    public static final Pose2d INITIAL_POSE = new Pose2d(1, 3, new Rotation2d());
-    public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(2);
-    public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCEL = MetersPerSecondPerSecond.of(4);
-    public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.5);
+  public static final Pose2d INITIAL_POSE = new Pose2d(1, 3, new Rotation2d());
+  public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(2);
+  public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCEL =
+      MetersPerSecondPerSecond.of(4);
+  public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.5);
 
-    public static final double kP = 3;
-    public static final double kI = .3;
-    public static final double kD = 0;
-    public static final double kS = 2;
-    public static final double kV = 1;
-    public static final double kA = 0;
+  public static final double kP = 3;
+  public static final double kI = .3;
+  public static final double kD = 0;
+  public static final double kS = 2;
+  public static final double kV = 1;
+  public static final double kA = 0;
 
-    public static class Drivetrain {
-        public static final double HIGH_GEARING = 7.33;
-        public static final double LOW_GEARING = 5.56;
-        //made up
-        public static final double MOI = 4;
-        public static final Measure<Mass> DRIVE_MASS = Kilograms.of(25);
-        public static final Measure<Distance> WHEEL_RADIUS = Inches.of(4);
-        public static final Measure<Distance> TRACK_WIDTH = Inches.of(17.75);
-        public static final Matrix<N7, N1> STD_DEVS = VecBuilder.fill(0, 0, 0, 0, 0, 0, 0);
-    }
+  public static class Drivetrain {
+    public static final double HIGH_GEARING = 7.33;
+    public static final double LOW_GEARING = 5.56;
+    // made up
+    public static final double MOI = 4;
+    public static final Measure<Mass> DRIVE_MASS = Kilograms.of(25);
+    public static final Measure<Distance> WHEEL_RADIUS = Inches.of(4);
+    public static final Measure<Distance> TRACK_WIDTH = Inches.of(17.75);
+    public static final Matrix<N7, N1> STD_DEVS = VecBuilder.fill(0, 0, 0, 0, 0, 0, 0);
+  }
 }

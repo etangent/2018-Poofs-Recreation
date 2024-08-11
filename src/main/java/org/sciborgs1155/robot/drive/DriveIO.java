@@ -3,25 +3,26 @@ package org.sciborgs1155.robot.drive;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public interface DriveIO {
-    public void setVoltages(double leftVoltage, double rightVoltage);
+  public void setVoltages(double leftVoltage, double rightVoltage);
 
-    /*
-     * Meters
-     */
-    public double getLeftPosition();
+  /*
+   * Meters
+   */
+  public double getLeftPosition();
 
-    public double getRightPosition();
-    /*
-     * Meters per second
-     */
-    public double getRightVelocity();
+  public double getRightPosition();
 
-    public double getLeftVelocity();
+  /*
+   * Meters per second
+   */
+  public double getRightVelocity();
 
-    public Rotation2d getHeading();
+  public double getLeftVelocity();
 
-    /**
-     * @param high if true, shifts into high gear; false shifts to low gear
-     */
-    public void shiftGears(boolean high);
+  public Rotation2d getHeading();
+
+  /**
+   * @param high if true, shifts into high gear; false shifts to low gear
+   */
+  public void shiftGears(boolean high);
 }

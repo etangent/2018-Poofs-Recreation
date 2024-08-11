@@ -6,7 +6,7 @@ public class NoIntake implements IntakeIO {
 
   @Override
   public double getVelocity() {
-      return 0;
+    return 0;
   }
 
   @Override

@@ -20,14 +20,13 @@ public class RealElevator implements ElevatorIO {
   private final Solenoid shifter = new Solenoid(PneumaticsModuleType.CTREPCM, SHIFTER);
   private final DigitalInput limitSwitch = new DigitalInput(SWITCH);
 
-
   public RealElevator() {
     TalonFXConfiguration toApply = new TalonFXConfiguration();
     toApply.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     toApply.CurrentLimits.SupplyCurrentLimitEnable = true;
     toApply.CurrentLimits.SupplyCurrentLimit = 30;
     /*
-     * I'm fairly sure that this encoder is attached in a way that 
+     * I'm fairly sure that this encoder is attached in a way that
      * I don't have to care about gearing/gear shifting (it's on the shifter shaft)
      */
     toApply.Feedback.FeedbackRemoteSensorID = REMOTE_ENCODER;
