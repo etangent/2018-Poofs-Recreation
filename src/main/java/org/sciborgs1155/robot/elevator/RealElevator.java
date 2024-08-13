@@ -77,11 +77,11 @@ public class RealElevator implements ElevatorIO {
 
   @Override
   public void close() throws Exception {
-      rightLeader.close();
-      rightFollower.close();
-      leftFollower1.close();
-      leftFollower2.close();
-      limitSwitch.close();
-      shifter.close();
+    rightLeader.close();
+    rightFollower.close();
+    leftFollower1.close();
+    leftFollower2.close();
+    limitSwitch.close();
+    shifter.close();
   }
 }

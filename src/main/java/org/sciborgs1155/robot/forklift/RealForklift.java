@@ -15,6 +15,6 @@ public class RealForklift implements ForkliftIO {
 
   @Override
   public void close() throws Exception {
-      deployer.close();
+    deployer.close();
   }
 }

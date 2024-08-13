@@ -15,6 +15,6 @@ public class RealHanger implements HangerIO {
 
   @Override
   public void close() throws Exception {
-      deployer.close();
+    deployer.close();
   }
 }

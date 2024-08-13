@@ -78,11 +78,11 @@ public class RealIntake implements IntakeIO {
 
   @Override
   public void close() throws Exception {
-      rightRoller.close();
-      leftRoller.close();
-      leftBeamBreak.close();
-      rightBeamBreak.close();
-      leftSolenoid.close();
-      rightSolenoid.close();
+    rightRoller.close();
+    leftRoller.close();
+    leftBeamBreak.close();
+    rightBeamBreak.close();
+    leftSolenoid.close();
+    rightSolenoid.close();
   }
 }

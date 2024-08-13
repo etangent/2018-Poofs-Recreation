@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.sciborgs1155.robot.intake.Intake;
 
 public class IntakeTest {
-    @Test
-    void initalize() throws Exception {
-        Intake.create().close();
-        reset();
-    }
+  @Test
+  void initalize() throws Exception {
+    Intake.create().close();
+    reset();
+  }
 }

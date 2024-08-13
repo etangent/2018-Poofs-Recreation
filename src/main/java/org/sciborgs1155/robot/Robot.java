@@ -76,11 +76,7 @@ public class Robot extends CommandRobot implements Logged {
 
   /** Creates an input stream for a joystick. */
   private InputStream createJoystickStream(InputStream input, double maxSpeed, double maxRate) {
-    return input
-        .deadband(Constants.DEADBAND, 1)
-        .scale(maxSpeed)
-        .signedPow(2)
-        .rateLimit(maxRate);
+    return input.deadband(Constants.DEADBAND, 1).scale(maxSpeed).signedPow(2).rateLimit(maxRate);
   }
 
   /**

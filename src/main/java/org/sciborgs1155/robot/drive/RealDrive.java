@@ -96,13 +96,13 @@ public class RealDrive implements DriveIO {
 
   @Override
   public void close() throws Exception {
-      rightLeader.close();
-      rightFollower1.close();
-      rightFollower2.close();
-      leftLeader.close();
-      leftFollower1.close();
-      leftFollower2.close();
-      gyro.close();
-      shifter.close();
+    rightLeader.close();
+    rightFollower1.close();
+    rightFollower2.close();
+    leftLeader.close();
+    leftFollower1.close();
+    leftFollower2.close();
+    gyro.close();
+    shifter.close();
   }
 }

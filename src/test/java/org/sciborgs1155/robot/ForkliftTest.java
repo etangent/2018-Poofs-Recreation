@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.sciborgs1155.robot.forklift.Forklift;
 
 public class ForkliftTest {
-    @Test
-    void initialize() throws Exception {
-        Forklift.create().close();
-        reset();
-    }
+  @Test
+  void initialize() throws Exception {
+    Forklift.create().close();
+    reset();
+  }
 }

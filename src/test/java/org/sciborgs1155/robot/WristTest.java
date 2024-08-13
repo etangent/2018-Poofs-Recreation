@@ -13,25 +13,25 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.sciborgs1155.robot.wrist.Wrist;
 
 public class WristTest {
-    private Wrist wrist;
-    private final double DELTA = 0.05;
+  private Wrist wrist;
+  private final double DELTA = 0.05;
 
-    @BeforeEach
-    void setup() {
-        setupHAL();
-        wrist = Wrist.create();
-    }
+  @BeforeEach
+  void setup() {
+    setupHAL();
+    wrist = Wrist.create();
+  }
 
-    @AfterEach
-    void destroy() throws Exception {
-        reset(wrist);
-    }
+  @AfterEach
+  void destroy() throws Exception {
+    reset(wrist);
+  }
 
-    @ParameterizedTest
-    @ValueSource(doubles = {Math.PI, Math.PI / 2, Math.PI / 4})
-    void reachesAngularPosition(double angle) {
-        run(wrist.goTo(() -> angle));
-        fastForward();
-        assertEquals(angle, wrist.measurement(), DELTA);
-    }
+  @ParameterizedTest
+  @ValueSource(doubles = {Math.PI, Math.PI / 2, Math.PI / 4})
+  void reachesAngularPosition(double angle) {
+    run(wrist.goTo(() -> angle));
+    fastForward();
+    assertEquals(angle, wrist.measurement(), DELTA);
+  }
 }

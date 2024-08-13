@@ -30,6 +30,6 @@ public class Forklift extends SubsystemBase implements AutoCloseable {
 
   @Override
   public void close() throws Exception {
-      hardware.close();
+    hardware.close();
   }
 }

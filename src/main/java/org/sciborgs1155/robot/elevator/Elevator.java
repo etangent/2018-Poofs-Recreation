@@ -137,6 +137,6 @@ public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
 
   @Override
   public void close() throws Exception {
-      hardware.close();
+    hardware.close();
   }
 }

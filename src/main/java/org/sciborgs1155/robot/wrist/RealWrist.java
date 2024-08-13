@@ -58,7 +58,7 @@ public class RealWrist implements WristIO {
 
   @Override
   public void close() throws Exception {
-      pivot.close();
-      limitSwitch.close();
+    pivot.close();
+    limitSwitch.close();
   }
 }

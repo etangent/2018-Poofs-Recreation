@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.sciborgs1155.robot.hanger.Hanger;
 
 public class HangerTest {
-    @Test
-    void initialize() throws Exception {
-        Hanger.create().close();
-        reset();
-    }
+  @Test
+  void initialize() throws Exception {
+    Hanger.create().close();
+    reset();
+  }
 }
