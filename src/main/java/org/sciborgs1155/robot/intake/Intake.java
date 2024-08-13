@@ -13,7 +13,7 @@ import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
 import org.sciborgs1155.robot.intake.IntakeIO.ClampState;
 
-public class Intake extends SubsystemBase implements Logged {
+public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   public static Intake create() {
     return Robot.isReal() ? new Intake(new RealIntake()) : none();
   }
@@ -69,8 +69,8 @@ public class Intake extends SubsystemBase implements Logged {
     return toggleClamp(CLAMP).withName("clamping");
   }
 
-  public Command close() {
-    return toggleClamp(DEFAULT).withName("closing");
+  public Command tighten() {
+    return toggleClamp(DEFAULT).withName("tightening");
   }
 
   public Command open() {
@@ -90,5 +90,10 @@ public class Intake extends SubsystemBase implements Logged {
   @Log.NT
   public boolean hasCube() {
     return hardware.hasCube();
+  }
+
+  @Override
+  public void close() throws Exception {
+      hardware.close();
   }
 }

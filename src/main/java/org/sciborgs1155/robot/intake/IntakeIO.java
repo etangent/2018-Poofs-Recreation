@@ -1,6 +1,6 @@
 package org.sciborgs1155.robot.intake;
 
-public interface IntakeIO {
+public interface IntakeIO extends AutoCloseable {
   public void setRollerPower(double power);
 
   /*

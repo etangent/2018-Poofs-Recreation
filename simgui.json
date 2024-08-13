@@ -88,9 +88,6 @@
       }
     }
   },
-  "NetworkTables Info": {
-    "visible": true
-  },
   "Plot": {
     "Plot <0>": {
       "plots": [
@@ -194,12 +191,30 @@
                 1.0
               ],
               "id": "NT:/Robot/drive/leftVelocitySetpoint"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Robot/drive/rightVelocityMeasurement"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Robot/drive/rightVelocitySetpoint"
             }
           ]
         }
       ],
       "window": {
-        "name": "dri"
+        "name": "drive"
       }
     }
   }

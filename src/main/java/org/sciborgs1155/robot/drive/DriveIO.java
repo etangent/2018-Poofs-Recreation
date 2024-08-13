@@ -2,7 +2,7 @@ package org.sciborgs1155.robot.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public interface DriveIO {
+public interface DriveIO extends AutoCloseable {
   public void setVoltages(double leftVoltage, double rightVoltage);
 
   /*

@@ -20,7 +20,7 @@ import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Constants;
 import org.sciborgs1155.robot.Robot;
 
-public class Elevator extends SubsystemBase implements Logged {
+public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
   public static Elevator create() {
     return Robot.isReal() ? new Elevator(new RealElevator()) : new Elevator(new SimElevator());
   }
@@ -133,5 +133,10 @@ public class Elevator extends SubsystemBase implements Logged {
     measurementVisualizer.setLength(hardware.getPosition());
     setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
     measurementVisualizer.setLength(hardware.getPosition());
+  }
+
+  @Override
+  public void close() throws Exception {
+      hardware.close();
   }
 }

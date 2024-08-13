@@ -54,4 +54,7 @@ public class SimElevator implements ElevatorIO {
   // unnecessary
   @Override
   public void zeroEncoders() {}
+
+  @Override
+  public void close() throws Exception {}
 }

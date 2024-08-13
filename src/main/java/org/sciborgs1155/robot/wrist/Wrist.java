@@ -19,7 +19,7 @@ import monologue.Annotations.Log;
 import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
 
-public class Wrist extends SubsystemBase implements Logged {
+public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
   public static Wrist create() {
     return Robot.isReal() ? new Wrist(new RealWrist()) : new Wrist(new SimWrist());
   }
@@ -107,5 +107,10 @@ public class Wrist extends SubsystemBase implements Logged {
 
     setpointVisualizer.setAngle(setpoint());
     measurementVisualizer.setAngle(measurement());
+  }
+
+  @Override
+  public void close() throws Exception {
+      hardware.close();
   }
 }

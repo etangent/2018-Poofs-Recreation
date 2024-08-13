@@ -24,9 +24,9 @@ public class DriveConstants {
   public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.5);
 
   public static final double kP = 3;
-  public static final double kI = .3;
+  public static final double kI = 0;
   public static final double kD = 0;
-  public static final double kS = 2;
+  public static final double kS = .5;
   public static final double kV = 1;
   public static final double kA = 0;
 

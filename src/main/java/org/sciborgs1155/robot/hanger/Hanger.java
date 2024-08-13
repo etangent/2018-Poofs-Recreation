@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.sciborgs1155.robot.Robot;
 
-public class Hanger extends SubsystemBase {
+public class Hanger extends SubsystemBase implements AutoCloseable {
   public static Hanger create() {
     return Robot.isReal() ? new Hanger(new RealHanger()) : none();
   }
@@ -25,5 +25,10 @@ public class Hanger extends SubsystemBase {
 
   public Command stow() {
     return run(() -> hardware.set(false));
+  }
+
+  @Override
+  public void close() throws Exception {
+      hardware.close();
   }
 }

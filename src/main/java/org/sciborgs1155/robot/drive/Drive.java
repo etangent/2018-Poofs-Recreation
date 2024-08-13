@@ -21,7 +21,7 @@ import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Constants;
 import org.sciborgs1155.robot.Robot;
 
-public class Drive extends SubsystemBase implements Logged {
+public class Drive extends SubsystemBase implements Logged, AutoCloseable {
   public static Drive create() {
     return Robot.isReal() ? new Drive(new RealDrive()) : new Drive(new SimDrive());
   }
@@ -90,7 +90,6 @@ public class Drive extends SubsystemBase implements Logged {
 
   public Command drive(InputStream leftVelocity, InputStream rightVelocity) {
     return run(() -> {
-          System.out.println(rightVelocity.getAsDouble());
           hardware.setVoltages(
               getVoltage(leftVelocity, Side.LEFT), getVoltage(rightVelocity, Side.RIGHT));
         })
@@ -105,11 +104,6 @@ public class Drive extends SubsystemBase implements Logged {
     return getVoltage(velocity, rightFeedback, rightFeedforward, hardware::getRightVelocity);
   }
 
-  /**
-   * @param control velocity for that side
-   * @param isRight if true, controls right side; otherwise, controls the left side
-   * @return voltage to set to motors
-   */
   public double getVoltage(
       InputStream velocity,
       PIDController pid,
@@ -134,5 +128,10 @@ public class Drive extends SubsystemBase implements Logged {
   public enum Side {
     LEFT,
     RIGHT
+  }
+
+  @Override
+  public void close() throws Exception {
+      hardware.close();
   }
 }

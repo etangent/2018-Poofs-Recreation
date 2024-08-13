@@ -70,4 +70,7 @@ public class SimDrive implements DriveIO {
       drive.setCurrentGearing(LOW_GEARING);
     }
   }
+
+  @Override
+  public void close() throws Exception {}
 }

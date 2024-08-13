@@ -78,7 +78,6 @@ public class Robot extends CommandRobot implements Logged {
   private InputStream createJoystickStream(InputStream input, double maxSpeed, double maxRate) {
     return input
         .deadband(Constants.DEADBAND, 1)
-        .negate()
         .scale(maxSpeed)
         .signedPow(2)
         .rateLimit(maxRate);
@@ -96,12 +95,9 @@ public class Robot extends CommandRobot implements Logged {
                 DriveConstants.MAX_SPEED.in(MetersPerSecond),
                 MAX_ACCEL.in(MetersPerSecondPerSecond)),
             createJoystickStream(
-                InputStream.of(driver::getRightY).negate(),
+                driver::getRightY,
                 DriveConstants.MAX_SPEED.in(MetersPerSecond),
                 MAX_ACCEL.in(MetersPerSecondPerSecond))));
-    // drive.setDefaultCommand(drive.drive(InputStream.of(() ->
-    // DriveConstants.MAX_SPEED.in(MetersPerSecond)), InputStream.of(() ->
-    // DriveConstants.MAX_SPEED.in(MetersPerSecond))));
   }
 
   /** Configures trigger -> command bindings */
