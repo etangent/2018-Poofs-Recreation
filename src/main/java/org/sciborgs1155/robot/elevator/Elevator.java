@@ -87,12 +87,10 @@ public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
 
   /** pulls up onto climbing area */
   public Command pullUp() {
-    return runOnce(() -> hardware.shiftGear(false))
-        .andThen(stow())
-        .onlyIf(this::atMaxHeight);
+    return runOnce(() -> hardware.shiftGear(false)).andThen(stow()).onlyIf(this::atMaxHeight);
   }
 
-  //i stole this but i understand it so it's okay
+  // i stole this but i understand it so it's okay
   public Command manualElevator(InputStream stickInput) {
     return goTo(
         stickInput

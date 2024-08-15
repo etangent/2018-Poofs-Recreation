@@ -83,7 +83,7 @@ public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
     return goTo(() -> MIN_ANGLE.in(Radians)).withName("stowing");
   }
 
-  //im very proud of this name
+  // im very proud of this name
   public Command unStow() {
     return goTo(() -> MAX_ANGLE.in(Radians)).withName("un-stowing");
   }
@@ -92,7 +92,8 @@ public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
     DoubleSupplier newAngle =
         () -> MathUtil.clamp(angle.getAsDouble(), MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
 
-    return run(() -> {
+    return run(
+        () -> {
           double prevVelocity = pivotFeedback.getSetpoint().velocity;
           double feedback = pivotFeedback.calculate(hardware.getPosition(), newAngle.getAsDouble());
           double accel = (pivotFeedback.getSetpoint().velocity - prevVelocity) / PERIOD.in(Seconds);

@@ -2,9 +2,9 @@ package org.sciborgs1155.robot.drive;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+import static org.sciborgs1155.robot.drive.DriveConstants.*;
 import static org.sciborgs1155.robot.drive.DriveConstants.INITIAL_POSE;
 import static org.sciborgs1155.robot.drive.DriveConstants.VELOCITY_TOLERANCE;
-import static org.sciborgs1155.robot.drive.DriveConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;

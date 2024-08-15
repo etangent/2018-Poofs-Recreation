@@ -92,20 +92,22 @@ public class Robot extends CommandRobot implements Logged {
                 MAX_ACCEL.in(MetersPerSecondPerSecond))));
 
     wrist.setDefaultCommand(wrist.stow());
-    //gives operator manual control of the elevator
-    elevator.setDefaultCommand(elevator.manualElevator(InputStream.of(operator::getLeftY).deadband(Constants.DEADBAND, 1)));
+    // gives operator manual control of the elevator
+    elevator.setDefaultCommand(
+        elevator.manualElevator(
+            InputStream.of(operator::getLeftY).deadband(Constants.DEADBAND, 1)));
     intake.setDefaultCommand(intake.stop());
   }
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {
-    //in conjunction with the default command pressing "a" toggles between max and min angle
+    // in conjunction with the default command pressing "a" toggles between max and min angle
     operator.a().toggleOnTrue(wrist.unStow());
 
-    //dpad up
+    // dpad up
     operator.povUp().whileTrue(elevator.fullExtend());
 
-    //dpad down
+    // dpad down
     operator.povDown().whileTrue(elevator.stow());
 
     operator.rightTrigger().onTrue(intake.intakeAndKeep());
@@ -120,7 +122,7 @@ public class Robot extends CommandRobot implements Logged {
 
     operator.leftTrigger().onTrue(forklift.deploy());
 
-    //climb sequence
+    // climb sequence
     operator.leftTrigger().and(operator.leftBumper()).onTrue(elevator.pullUp());
 
     driver.rightTrigger().onTrue(intake.shoot());
