@@ -24,10 +24,11 @@ public class ElevatorConstants {
   //
   public static final Measure<Distance> HEIGHT_FROM_GROUND = Meters.of(.3);
   //
+  // in addition to being fake, this is relative to the bottom of travel
   public static final Measure<Distance> MAX_HEIGHT = Meters.of(2);
   //
   public static final Measure<Distance> POSITION_TOLERANCE = Meters.of(.1);
-  public static final Measure<Velocity<Distance>> MAX_MANUAL_VELOCITY = MAX_VELOCITY.divide(4);
+  public static final Measure<Velocity<Distance>> MAX_MANUAL_VELOCITY = MAX_VELOCITY.divide(2);
 
   public static final double kP = 10;
   public static final double kI = 0;

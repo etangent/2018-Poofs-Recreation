@@ -55,4 +55,10 @@ public class RealWrist implements WristIO {
   public void zeroEncoders() {
     pivot.setPosition(0);
   }
+
+  @Override
+  public void close() throws Exception {
+    pivot.close();
+    limitSwitch.close();
+  }
 }

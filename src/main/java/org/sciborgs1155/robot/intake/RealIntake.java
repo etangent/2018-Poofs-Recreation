@@ -75,4 +75,14 @@ public class RealIntake implements IntakeIO {
   public boolean hasCube() {
     return leftBeamBreak.get() && rightBeamBreak.get();
   }
+
+  @Override
+  public void close() throws Exception {
+    rightRoller.close();
+    leftRoller.close();
+    leftBeamBreak.close();
+    rightBeamBreak.close();
+    leftSolenoid.close();
+    rightSolenoid.close();
+  }
 }

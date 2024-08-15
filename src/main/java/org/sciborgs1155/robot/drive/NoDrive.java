@@ -35,4 +35,7 @@ public class NoDrive implements DriveIO {
 
   @Override
   public void shiftGears(boolean high) {}
+
+  @Override
+  public void close() throws Exception {}
 }

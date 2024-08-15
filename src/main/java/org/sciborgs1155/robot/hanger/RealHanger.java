@@ -12,4 +12,9 @@ public class RealHanger implements HangerIO {
   public void set(boolean extended) {
     deployer.set(extended);
   }
+
+  @Override
+  public void close() throws Exception {
+    deployer.close();
+  }
 }

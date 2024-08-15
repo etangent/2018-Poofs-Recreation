@@ -21,4 +21,7 @@ public class NoWrist implements WristIO {
 
   @Override
   public void zeroEncoders() {}
+
+  @Override
+  public void close() throws Exception {}
 }

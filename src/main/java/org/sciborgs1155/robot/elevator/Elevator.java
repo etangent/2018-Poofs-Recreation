@@ -20,7 +20,7 @@ import org.sciborgs1155.lib.InputStream;
 import org.sciborgs1155.robot.Constants;
 import org.sciborgs1155.robot.Robot;
 
-public class Elevator extends SubsystemBase implements Logged {
+public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
   public static Elevator create() {
     return Robot.isReal() ? new Elevator(new RealElevator()) : new Elevator(new SimElevator());
   }
@@ -87,11 +87,10 @@ public class Elevator extends SubsystemBase implements Logged {
 
   /** pulls up onto climbing area */
   public Command pullUp() {
-    return runOnce(() -> hardware.shiftGear(false))
-        .andThen(goTo(() -> 0))
-        .onlyIf(this::atMaxHeight);
+    return runOnce(() -> hardware.shiftGear(false)).andThen(stow()).onlyIf(this::atMaxHeight);
   }
 
+  // i stole this but i understand it so it's okay
   public Command manualElevator(InputStream stickInput) {
     return goTo(
         stickInput
@@ -99,6 +98,14 @@ public class Elevator extends SubsystemBase implements Logged {
             // convert to position from velocity
             .scale(Constants.PERIOD.in(Seconds))
             .add(() -> elevatorFeedback.getGoal().position));
+  }
+
+  public Command stow() {
+    return goTo(() -> 0).withName("stowing");
+  }
+
+  public Command fullExtend() {
+    return goTo(() -> MAX_HEIGHT.in(Meters)).withName("fully-extending");
   }
 
   public Command goTo(DoubleSupplier position) {
@@ -133,5 +140,10 @@ public class Elevator extends SubsystemBase implements Logged {
     measurementVisualizer.setLength(hardware.getPosition());
     setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
     measurementVisualizer.setLength(hardware.getPosition());
+  }
+
+  @Override
+  public void close() throws Exception {
+    hardware.close();
   }
 }

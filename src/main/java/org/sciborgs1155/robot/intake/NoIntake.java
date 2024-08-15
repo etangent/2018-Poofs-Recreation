@@ -21,4 +21,7 @@ public class NoIntake implements IntakeIO {
   public boolean hasCube() {
     return false;
   }
+
+  @Override
+  public void close() throws Exception {}
 }

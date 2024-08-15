@@ -12,14 +12,13 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
 
-public class Wrist extends SubsystemBase implements Logged {
+public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
   public static Wrist create() {
     return Robot.isReal() ? new Wrist(new RealWrist()) : new Wrist(new SimWrist());
   }
@@ -80,11 +79,21 @@ public class Wrist extends SubsystemBase implements Logged {
     return Math.abs(hardware.getPosition() - position) < POSITION_TOLERANCE.in(Radians);
   }
 
+  public Command stow() {
+    return goTo(() -> MIN_ANGLE.in(Radians)).withName("stowing");
+  }
+
+  // im very proud of this name
+  public Command unStow() {
+    return goTo(() -> MAX_ANGLE.in(Radians)).withName("un-stowing");
+  }
+
   public Command goTo(DoubleSupplier angle) {
     DoubleSupplier newAngle =
         () -> MathUtil.clamp(angle.getAsDouble(), MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
 
-    return run(() -> {
+    return run(
+        () -> {
           double prevVelocity = pivotFeedback.getSetpoint().velocity;
           double feedback = pivotFeedback.calculate(hardware.getPosition(), newAngle.getAsDouble());
           double accel = (pivotFeedback.getSetpoint().velocity - prevVelocity) / PERIOD.in(Seconds);
@@ -95,8 +104,7 @@ public class Wrist extends SubsystemBase implements Logged {
                   accel);
 
           hardware.setVoltage(feedback + feedforward);
-        })
-        .andThen(Commands.idle(this));
+        });
   }
 
   @Override
@@ -107,5 +115,10 @@ public class Wrist extends SubsystemBase implements Logged {
 
     setpointVisualizer.setAngle(setpoint());
     measurementVisualizer.setAngle(measurement());
+  }
+
+  @Override
+  public void close() throws Exception {
+    hardware.close();
   }
 }

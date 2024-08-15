@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.sciborgs1155.robot.Robot;
 
-public class Forklift extends SubsystemBase {
+public class Forklift extends SubsystemBase implements AutoCloseable {
   public static Forklift create() {
     return Robot.isReal() ? new Forklift(new RealForklift()) : none();
   }
@@ -21,10 +21,15 @@ public class Forklift extends SubsystemBase {
   }
 
   public Command deploy() {
-    return run(() -> hardware.set(true)).andThen(Commands.idle(this));
+    return runOnce(() -> hardware.set(true)).andThen(Commands.idle(this));
   }
 
   public Command retract() {
-    return run(() -> hardware.set(false)).andThen(Commands.idle(this));
+    return runOnce(() -> hardware.set(false)).andThen(Commands.idle(this));
+  }
+
+  @Override
+  public void close() throws Exception {
+    hardware.close();
   }
 }

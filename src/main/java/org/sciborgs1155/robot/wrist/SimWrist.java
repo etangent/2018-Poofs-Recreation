@@ -52,4 +52,7 @@ public class SimWrist implements WristIO {
   // obviously pointless; limit switch is never true here
   @Override
   public void zeroEncoders() {}
+
+  @Override
+  public void close() throws Exception {}
 }

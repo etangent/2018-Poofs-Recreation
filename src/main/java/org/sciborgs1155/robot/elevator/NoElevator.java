@@ -24,4 +24,7 @@ public class NoElevator implements ElevatorIO {
 
   @Override
   public void zeroEncoders() {}
+
+  @Override
+  public void close() throws Exception {}
 }

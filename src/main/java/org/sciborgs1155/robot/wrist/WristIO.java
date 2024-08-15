@@ -1,6 +1,6 @@
 package org.sciborgs1155.robot.wrist;
 
-public interface WristIO {
+public interface WristIO extends AutoCloseable {
   public void setVoltage(double voltage);
 
   /**
