@@ -21,13 +21,13 @@ public class DriveConstants {
   public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(2);
   public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCEL =
       MetersPerSecondPerSecond.of(4);
-  public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.5);
+  public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.1);
 
-  public static final double kP = 3;
-  public static final double kI = 0;
+  public static final double kP = 5;
+  public static final double kI = 0.1;
   public static final double kD = 0;
-  public static final double kS = .5;
-  public static final double kV = 1;
+  public static final double kS = .2;
+  public static final double kV = 1.3;
   public static final double kA = 0;
 
   public static class Drivetrain {

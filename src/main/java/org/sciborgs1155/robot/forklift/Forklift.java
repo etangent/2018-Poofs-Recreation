@@ -21,11 +21,11 @@ public class Forklift extends SubsystemBase implements AutoCloseable {
   }
 
   public Command deploy() {
-    return run(() -> hardware.set(true)).andThen(Commands.idle(this));
+    return runOnce(() -> hardware.set(true)).andThen(Commands.idle(this));
   }
 
   public Command retract() {
-    return run(() -> hardware.set(false)).andThen(Commands.idle(this));
+    return runOnce(() -> hardware.set(false)).andThen(Commands.idle(this));
   }
 
   @Override

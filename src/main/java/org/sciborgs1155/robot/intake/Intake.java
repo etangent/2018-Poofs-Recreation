@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command intakeAndKeep() {
-    return forward().until(this::hasCube).andThen(clamp()).withName("intaking and keeping");
+    return backward().until(this::hasCube).andThen(clamp()).withName("intaking and keeping");
   }
 
   public Command drop() {

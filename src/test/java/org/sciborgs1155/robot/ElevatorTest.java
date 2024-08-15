@@ -5,7 +5,6 @@ import static org.sciborgs1155.lib.TestingUtil.fastForward;
 import static org.sciborgs1155.lib.TestingUtil.reset;
 import static org.sciborgs1155.lib.TestingUtil.run;
 import static org.sciborgs1155.lib.TestingUtil.setupHAL;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

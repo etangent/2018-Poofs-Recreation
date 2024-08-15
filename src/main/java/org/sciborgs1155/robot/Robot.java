@@ -1,15 +1,11 @@
 package org.sciborgs1155.robot;
 
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-import static edu.wpi.first.wpilibj2.command.button.RobotModeTriggers.*;
 import static org.sciborgs1155.robot.drive.DriveConstants.MAX_ACCEL;
-import static org.sciborgs1155.robot.elevator.ElevatorConstants.MAX_HEIGHT;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -76,7 +72,7 @@ public class Robot extends CommandRobot implements Logged {
 
   /** Creates an input stream for a joystick. */
   private InputStream createJoystickStream(InputStream input, double maxSpeed, double maxRate) {
-    return input.deadband(Constants.DEADBAND, 1).scale(maxSpeed).signedPow(2).rateLimit(maxRate);
+    return input.signedPow(2).scale(maxSpeed).rateLimit(maxRate);
   }
 
   /**
@@ -94,18 +90,41 @@ public class Robot extends CommandRobot implements Logged {
                 driver::getRightY,
                 DriveConstants.MAX_SPEED.in(MetersPerSecond),
                 MAX_ACCEL.in(MetersPerSecondPerSecond))));
+
+    wrist.setDefaultCommand(wrist.stow());
+    //gives operator manual control of the elevator
+    elevator.setDefaultCommand(elevator.manualElevator(InputStream.of(operator::getLeftY).deadband(Constants.DEADBAND, 1)));
+    intake.setDefaultCommand(intake.stop());
   }
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {
-    // autonomous().whileTrue(new ProxyCommand(autos::get));
-    FaultLogger.onFailing(f -> Commands.print(f.toString()));
-    operator
-        .b()
-        .onTrue(
-            wrist
-                .goTo(() -> Math.PI / 8)
-                .alongWith(elevator.goTo(() -> MAX_HEIGHT.in(Meters) / 2)));
-    operator.a().onTrue(wrist.goTo(() -> Math.PI / 1.5).alongWith(elevator.goTo(() -> 0)));
+    //in conjunction with the default command pressing "a" toggles between max and min angle
+    operator.a().toggleOnTrue(wrist.unStow());
+
+    //dpad up
+    operator.povUp().whileTrue(elevator.fullExtend());
+
+    //dpad down
+    operator.povDown().whileTrue(elevator.stow());
+
+    operator.rightTrigger().onTrue(intake.intakeAndKeep());
+
+    /*
+     * can cancel above command and go straight to clamping
+     * if rollers are running to long
+     */
+    operator.rightBumper().onTrue(intake.clamp());
+
+    operator.leftBumper().onTrue(hanger.deploy());
+
+    operator.leftTrigger().onTrue(forklift.deploy());
+
+    //climb sequence
+    operator.leftTrigger().and(operator.leftBumper()).onTrue(elevator.pullUp());
+
+    driver.rightTrigger().onTrue(intake.shoot());
+
+    driver.leftTrigger().onTrue(intake.drop());
   }
 }

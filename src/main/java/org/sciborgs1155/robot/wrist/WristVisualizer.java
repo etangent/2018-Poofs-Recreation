@@ -1,7 +1,5 @@
 package org.sciborgs1155.robot.wrist;
 
-import static org.sciborgs1155.robot.wrist.WristConstants.*;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;

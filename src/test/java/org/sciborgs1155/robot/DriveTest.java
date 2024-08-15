@@ -13,7 +13,7 @@ import org.sciborgs1155.robot.drive.SimDrive;
 
 public class DriveTest {
   private Drive drive;
-  private final double DELTA = 0.15;
+  private final double DELTA = 0.1;
 
   @BeforeEach
   void setup() {
