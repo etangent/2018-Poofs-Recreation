@@ -217,7 +217,8 @@
         }
       ],
       "window": {
-        "name": "drive"
+        "name": "drive",
+        "visible": false
       }
     }
   }
