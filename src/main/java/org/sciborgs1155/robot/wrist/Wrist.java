@@ -12,11 +12,16 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
+import org.sciborgs1155.robot.hanger.Hanger;
 
 public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
   public static Wrist create() {
@@ -80,22 +85,28 @@ public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command stow() {
-    return goTo(() -> MIN_ANGLE.in(Radians)).withName("stowing");
+    return goTo(() -> MIN_ANGLE.in(Radians)).until(this::atGoal).asProxy().withName("stowing");
   }
 
   // im very proud of this name
   public Command unStow() {
-    return goTo(() -> MAX_ANGLE.in(Radians)).withName("un-stowing");
+    return goTo(() -> MAX_ANGLE.in(Radians)).until(this::atGoal).asProxy().withName("un-stowing");
+  }
+
+  public Command shootAngle() {
+    return goTo(() -> Math.PI / 4).until(this::atGoal).asProxy();
+  }
+
+  public Command toggle() {
+    return new DeferredCommand(() -> pivotFeedback.getGoal().position == 0 ? unStow() : stow(), Set.of(this));
   }
 
   public Command goTo(DoubleSupplier angle) {
-    DoubleSupplier newAngle =
-        () -> MathUtil.clamp(angle.getAsDouble(), MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
-
     return run(
         () -> {
+          double newAngle = MathUtil.clamp(angle.getAsDouble(), MIN_ANGLE.in(Radians), MAX_ANGLE.in(Radians));
           double prevVelocity = pivotFeedback.getSetpoint().velocity;
-          double feedback = pivotFeedback.calculate(hardware.getPosition(), newAngle.getAsDouble());
+          double feedback = pivotFeedback.calculate(hardware.getPosition(), newAngle);
           double accel = (pivotFeedback.getSetpoint().velocity - prevVelocity) / PERIOD.in(Seconds);
           double feedforward =
               pivotFeedforward.calculate(
@@ -107,6 +118,10 @@ public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
         });
   }
 
+  public Command hold() {
+    return goTo(() -> goal()).withName("holding");
+  }
+ 
   @Override
   public void periodic() {
     if (hardware.atLimitSwitch()) {
@@ -115,6 +130,8 @@ public class Wrist extends SubsystemBase implements Logged, AutoCloseable {
 
     setpointVisualizer.setAngle(setpoint());
     measurementVisualizer.setAngle(measurement());
+
+    log("command", Optional.ofNullable(getCurrentCommand()).map(Command::getName).orElse("none"));
   }
 
   @Override

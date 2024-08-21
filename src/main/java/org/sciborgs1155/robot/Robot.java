@@ -2,11 +2,18 @@ package org.sciborgs1155.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+import static edu.wpi.first.wpilibj2.command.button.RobotModeTriggers.*;
 import static org.sciborgs1155.robot.drive.DriveConstants.MAX_ACCEL;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import java.util.Set;
+import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import monologue.Monologue;
@@ -45,7 +52,9 @@ public class Robot extends CommandRobot implements Logged {
   private final Hanger hanger = Hanger.create();
 
   // COMMANDS
-  @Log.NT private final Autos autos = new Autos();
+  @Log.NT
+  private final SendableChooser<Command> autos =
+      Autos.configureAutos(drive, elevator, wrist, intake);
 
   /** The robot contains subsystems, OI devices, and commands. */
   public Robot() {
@@ -72,7 +81,7 @@ public class Robot extends CommandRobot implements Logged {
 
   /** Creates an input stream for a joystick. */
   private InputStream createJoystickStream(InputStream input, double maxSpeed, double maxRate) {
-    return input.signedPow(2).scale(maxSpeed).rateLimit(maxRate).negate();
+    return input.signedPow(2).scale(maxSpeed).rateLimit(maxRate);
   }
 
   /**
@@ -80,29 +89,38 @@ public class Robot extends CommandRobot implements Logged {
    * running on a subsystem.
    */
   private void configureSubsystemDefaults() {
+    DoubleSupplier scalingFactor = () -> 1 - (Math.abs(driver.getLeftY() - driver.getRightY()) / 8);
+
+    InputStream leftSupplier = () -> scalingFactor.getAsDouble() * driver.getLeftY();
+    InputStream rightSupplier = () -> scalingFactor.getAsDouble() * driver.getRightY();
+
     drive.setDefaultCommand(
         drive.drive(
             createJoystickStream(
-                driver::getLeftY,
+                leftSupplier,
                 DriveConstants.MAX_SPEED.in(MetersPerSecond),
                 MAX_ACCEL.in(MetersPerSecondPerSecond)),
             createJoystickStream(
-                driver::getRightY,
+                rightSupplier,
                 DriveConstants.MAX_SPEED.in(MetersPerSecond),
                 MAX_ACCEL.in(MetersPerSecondPerSecond))));
-
-    wrist.setDefaultCommand(wrist.stow());
     // gives operator manual control of the elevator
     elevator.setDefaultCommand(
         elevator.manualElevator(
             InputStream.of(operator::getLeftY).deadband(Constants.DEADBAND, 1)));
-    intake.setDefaultCommand(intake.stop());
+    intake.setDefaultCommand(
+        new DeferredCommand(
+                () -> intake.hasCube() ? intake.clamp().alongWith(intake.stop()) : intake.tighten().alongWith(intake.stop()),
+                Set.of(intake))
+            .withName("intake default"));
+    wrist.setDefaultCommand(wrist.hold());
   }
 
   /** Configures trigger -> command bindings */
   private void configureBindings() {
-    // in conjunction with the default command pressing "a" toggles between max and min angle
-    operator.a().toggleOnTrue(wrist.unStow());
+    autonomous().onTrue(Commands.deferredProxy(autos::getSelected));
+
+    operator.a().onTrue(wrist.toggle());
 
     // dpad up
     operator.povUp().whileTrue(elevator.fullExtend());

@@ -3,6 +3,7 @@ package org.sciborgs1155.robot;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.sciborgs1155.lib.TestingUtil.*;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +33,9 @@ public class DriveTest {
     run(drive.drive(InputStream.of(() -> leftSpeed), InputStream.of(() -> rightSpeed)));
     fastForward();
 
-    assertEquals(leftSpeed, drive.leftVelocityMeasurement(), DELTA);
-    assertEquals(rightSpeed, drive.rightVelocityMeasurement(), DELTA);
+    DifferentialDriveWheelSpeeds speeds = drive.wheelSpeeds();
+
+    assertEquals(leftSpeed, speeds.leftMetersPerSecond, DELTA);
+    assertEquals(rightSpeed, speeds.rightMetersPerSecond, DELTA);
   }
 }

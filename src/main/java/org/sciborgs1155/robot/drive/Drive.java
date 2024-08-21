@@ -3,13 +3,19 @@ package org.sciborgs1155.robot.drive;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static org.sciborgs1155.robot.drive.DriveConstants.*;
+import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.TRACK_WIDTH;
 import static org.sciborgs1155.robot.drive.DriveConstants.INITIAL_POSE;
 import static org.sciborgs1155.robot.drive.DriveConstants.VELOCITY_TOLERANCE;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,6 +48,9 @@ public class Drive extends SubsystemBase implements Logged, AutoCloseable {
 
   private final DifferentialDriveOdometry odometry;
 
+  private final DifferentialDriveKinematics kinematics =
+      new DifferentialDriveKinematics(TRACK_WIDTH);
+
   @Log.NT private final Field2d field2d = new Field2d();
 
   public Drive(DriveIO hardware) {
@@ -63,40 +72,69 @@ public class Drive extends SubsystemBase implements Logged, AutoCloseable {
     return odometry.getPoseMeters();
   }
 
+  public void resetPose(Pose2d pose) {
+    odometry.resetPosition(hardware.getHeading(), wheelPositions(), INITIAL_POSE);
+  }
+
   @Log.NT
   public boolean atSetpoint() {
     return leftFeedback.atSetpoint() && rightFeedback.atSetpoint();
   }
 
   @Log.NT
-  public double leftVelocitySetpoint() {
-    return leftFeedback.getSetpoint();
+  public DifferentialDriveWheelPositions wheelPositions() {
+    return new DifferentialDriveWheelPositions(
+        hardware.getLeftPosition(), hardware.getRightPosition());
   }
 
   @Log.NT
-  public double leftVelocityMeasurement() {
-    return hardware.getLeftVelocity();
+  public DifferentialDriveWheelSpeeds wheelSpeedSetpoints() {
+    return new DifferentialDriveWheelSpeeds(
+        leftFeedback.getSetpoint(), rightFeedback.getSetpoint());
   }
 
   @Log.NT
-  public double rightVelocitySetpoint() {
-    return rightFeedback.getSetpoint();
+  public DifferentialDriveWheelSpeeds wheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(
+        hardware.getLeftVelocity(), hardware.getRightVelocity());
   }
 
-  @Log.NT
-  public double rightVelocityMeasurement() {
-    return hardware.getRightVelocity();
+  public ChassisSpeeds chassisSpeeds() {
+    return kinematics.toChassisSpeeds(wheelSpeeds());
   }
 
-  public Command drive(InputStream leftVelocity, InputStream rightVelocity) {
-    return run(() -> {
-          hardware.setVoltages(
-              getVoltage(leftVelocity, Side.LEFT), getVoltage(rightVelocity, Side.RIGHT));
-        })
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    setWheelSpeeds(kinematics.toWheelSpeeds(chassisSpeeds));
+  }
+
+  public void setWheelSpeeds(DifferentialDriveWheelSpeeds wheelSpeeds) {
+    hardware.setVoltages(
+        getVoltage(wheelSpeeds.leftMetersPerSecond, Side.LEFT),
+        getVoltage(wheelSpeeds.rightMetersPerSecond, Side.RIGHT));
+  }
+
+  public Command drive(InputStream givenLeftVelocity, InputStream givenRightVelocity) {
+    InputStream leftVelocity =
+        () ->
+            MathUtil.clamp(
+                givenLeftVelocity.get(),
+                -MAX_SPEED.in(MetersPerSecond),
+                MAX_SPEED.in(MetersPerSecond));
+    InputStream rightVelocity =
+        () ->
+            MathUtil.clamp(
+                givenRightVelocity.get(),
+                -MAX_SPEED.in(MetersPerSecond),
+                MAX_SPEED.in(MetersPerSecond));
+
+    return run(() ->
+            setWheelSpeeds(
+                new DifferentialDriveWheelSpeeds(
+                    leftVelocity.getAsDouble(), rightVelocity.getAsDouble())))
         .withName("driving");
   }
 
-  public double getVoltage(InputStream velocity, Side side) {
+  public double getVoltage(double velocity, Side side) {
     if (side == Side.LEFT) {
       return getVoltage(velocity, leftFeedback, leftFeedforward, hardware::getLeftVelocity);
     }
@@ -105,15 +143,12 @@ public class Drive extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public double getVoltage(
-      InputStream velocity,
-      PIDController pid,
-      SimpleMotorFeedforward ff,
-      DoubleSupplier measurement) {
+      double velocity, PIDController pid, SimpleMotorFeedforward ff, DoubleSupplier measurement) {
 
     double prevVelocity = pid.getSetpoint();
-    double feedbackOut = pid.calculate(measurement.getAsDouble(), velocity.getAsDouble());
-    double accel = (velocity.getAsDouble() - prevVelocity) / Constants.PERIOD.in(Seconds);
-    double feedforwardOut = ff.calculate(velocity.getAsDouble(), accel);
+    double feedbackOut = pid.calculate(measurement.getAsDouble(), velocity);
+    double accel = (velocity - prevVelocity) / Constants.PERIOD.in(Seconds);
+    double feedforwardOut = ff.calculate(velocity, accel);
 
     return feedbackOut + feedforwardOut;
   }

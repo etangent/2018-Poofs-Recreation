@@ -90,11 +90,6 @@ public class RealDrive implements DriveIO {
   }
 
   @Override
-  public void shiftGears(boolean high) {
-    shifter.set(high);
-  }
-
-  @Override
   public void close() throws Exception {
     rightLeader.close();
     rightFollower1.close();

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -101,11 +102,11 @@ public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command stow() {
-    return goTo(() -> 0).withName("stowing");
+    return goTo(() -> 0).until(this::atGoal).asProxy().withName("stowing");
   }
 
   public Command fullExtend() {
-    return goTo(() -> MAX_HEIGHT.in(Meters)).withName("fully-extending");
+    return goTo(() -> MAX_HEIGHT.in(Meters)).until(this::atGoal).asProxy().withName("fully-extending");
   }
 
   public Command goTo(DoubleSupplier position) {
@@ -140,6 +141,8 @@ public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
     measurementVisualizer.setLength(hardware.getPosition());
     setPointVisualizer.setLength(elevatorFeedback.getSetpoint().position);
     measurementVisualizer.setLength(hardware.getPosition());
+
+    log("command", Optional.ofNullable(getCurrentCommand()).map(Command::getName).orElse("none"));
   }
 
   @Override

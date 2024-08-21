@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Time;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * Constants is a globally accessible class for storing immutable values. Every value should be
@@ -15,6 +17,11 @@ import edu.wpi.first.units.Time;
  * @see Units
  */
 public class Constants {
+  /** Returns the robot's alliance. */
+  public static Alliance alliance() {
+    return DriverStation.getAlliance().orElse(Alliance.Blue);
+  }
+
   public static final Measure<Time> PERIOD = Seconds.of(0.02); // roborio tickrate (s)
   public static final double DEADBAND = 0.1;
 }

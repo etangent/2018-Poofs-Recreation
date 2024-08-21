@@ -17,17 +17,17 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Velocity;
 
 public class DriveConstants {
-  public static final Pose2d INITIAL_POSE = new Pose2d(1, 3, new Rotation2d());
+  public static final Pose2d INITIAL_POSE = new Pose2d(.5, 7, Rotation2d.fromRadians(Math.PI));
   public static final Measure<Velocity<Distance>> MAX_SPEED = MetersPerSecond.of(2);
   public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCEL =
-      MetersPerSecondPerSecond.of(4);
+      MetersPerSecondPerSecond.of(3);
   public static final Measure<Velocity<Distance>> VELOCITY_TOLERANCE = MetersPerSecond.of(.1);
 
-  public static final double kP = 5;
+  public static final double kP = 10;
   public static final double kI = 0.1;
-  public static final double kD = 0;
+  public static final double kD = 0.3;
   public static final double kS = .2;
-  public static final double kV = 1.3;
+  public static final double kV = 1.5;
   public static final double kA = 0;
 
   public static class Drivetrain {

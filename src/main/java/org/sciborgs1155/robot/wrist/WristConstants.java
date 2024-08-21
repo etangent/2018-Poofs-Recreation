@@ -18,19 +18,19 @@ import edu.wpi.first.units.Velocity;
  */
 public class WristConstants {
   //
-  public static final Measure<Velocity<Angle>> MAX_VELOCITY = RadiansPerSecond.of(3);
+  public static final Measure<Velocity<Angle>> MAX_VELOCITY = RadiansPerSecond.of(4);
   //
   public static final Measure<Velocity<Velocity<Angle>>> MAX_ACCELERATION =
-      RadiansPerSecond.per(Second).of(6);
+      RadiansPerSecond.per(Second).of(8);
   public static final Measure<Angle> MAX_ANGLE = Radians.of(Math.PI);
   public static final Measure<Angle> MIN_ANGLE = Radians.of(0);
-  public static final Measure<Angle> POSITION_TOLERANCE = Radians.of(.01);
+  public static final Measure<Angle> POSITION_TOLERANCE = Radians.of(.05);
 
-  public static final double kP = 10;
+  public static final double kP = 12;
   public static final double kI = 0;
   public static final double kD = .5;
   public static final double kS = 0;
-  public static final double kG = 1.835;
+  public static final double kG = 1.9;
   public static final double kV = 1;
   public static final double kA = 0;
 

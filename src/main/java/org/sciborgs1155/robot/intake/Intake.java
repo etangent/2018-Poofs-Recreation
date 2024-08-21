@@ -8,6 +8,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Optional;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import org.sciborgs1155.robot.Robot;
@@ -33,12 +34,14 @@ public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command drop() {
-    return open().until(() -> !hasCube());
+    return open()
+    .until(() -> !hasCube())
+    .andThen(tighten());
   }
 
   // I may do more stuff with this
   public Command shoot() {
-    return runIntake(SHOOTING_SPEED).withName("shooting");
+    return runIntake(SHOOTING_SPEED).until(() -> !hasCube()).withName("shooting");
   }
 
   public Command runIntake(double power) {
@@ -60,9 +63,7 @@ public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command toggleClamp(ClampState clamp) {
-    return runOnce(() -> hardware.setClamp(clamp))
-        .andThen(Commands.idle(this))
-        .finallyDo(() -> hardware.setClamp(DEFAULT));
+    return runOnce(() -> hardware.setClamp(clamp)).asProxy();
   }
 
   public Command clamp() {
@@ -90,6 +91,11 @@ public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   @Log.NT
   public boolean hasCube() {
     return hardware.hasCube();
+  }
+
+  @Override
+  public void periodic() {
+    log("command", Optional.ofNullable(getCurrentCommand()).map(Command::getName).orElse("none"));
   }
 
   @Override

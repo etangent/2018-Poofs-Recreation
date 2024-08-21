@@ -17,10 +17,10 @@ import edu.wpi.first.units.Velocity;
  */
 public class ElevatorConstants {
   //
-  public static final Measure<Velocity<Distance>> MAX_VELOCITY = MetersPerSecond.of(3);
+  public static final Measure<Velocity<Distance>> MAX_VELOCITY = MetersPerSecond.of(4);
   //
   public static final Measure<Velocity<Velocity<Distance>>> MAX_ACCELERATION =
-      MetersPerSecondPerSecond.of(6);
+      MetersPerSecondPerSecond.of(10);
   //
   public static final Measure<Distance> HEIGHT_FROM_GROUND = Meters.of(.3);
   //

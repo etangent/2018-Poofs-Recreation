@@ -20,9 +20,4 @@ public interface DriveIO extends AutoCloseable {
   public double getLeftVelocity();
 
   public Rotation2d getHeading();
-
-  /**
-   * @param high if true, shifts into high gear; false shifts to low gear
-   */
-  public void shiftGears(boolean high);
 }
