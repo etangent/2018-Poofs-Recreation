@@ -1,7 +1,9 @@
 package org.sciborgs1155.robot.drive;
 
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 import static org.sciborgs1155.robot.drive.DriveConstants.*;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.TRACK_WIDTH;
 import static org.sciborgs1155.robot.drive.DriveConstants.INITIAL_POSE;
@@ -16,9 +18,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
@@ -51,6 +58,8 @@ public class Drive extends SubsystemBase implements Logged, AutoCloseable {
   private final DifferentialDriveKinematics kinematics =
       new DifferentialDriveKinematics(TRACK_WIDTH);
 
+  private final SysIdRoutine routine;
+
   @Log.NT private final Field2d field2d = new Field2d();
 
   public Drive(DriveIO hardware) {
@@ -65,6 +74,30 @@ public class Drive extends SubsystemBase implements Logged, AutoCloseable {
 
     leftFeedback.setTolerance(VELOCITY_TOLERANCE.in(MetersPerSecond));
     rightFeedback.setTolerance(VELOCITY_TOLERANCE.in(MetersPerSecond));
+
+    routine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+      (v) -> hardware.setVoltages(v.in(Volts), v.in(Volts)), 
+      (log) -> {
+        log.motor("left")
+         .voltage(hardware.getLeftVoltage())
+         .linearPosition(Meters.of(hardware.getLeftPosition()))
+         .linearVelocity(MetersPerSecond.of(hardware.getLeftVelocity()));
+
+        log.motor("right")
+        .voltage(hardware.getRightVoltage())
+        .linearPosition(Meters.of(hardware.getRightPosition()))
+        .linearVelocity(MetersPerSecond.of(hardware.getRightVelocity()));
+      }, 
+      this));
+
+    SmartDashboard.putData("quasistatic forward",
+    routine.quasistatic(Direction.kForward));
+    SmartDashboard.putData("quasistatic backward",
+    routine.quasistatic(Direction.kReverse));
+    SmartDashboard.putData("dynamic forward",
+    routine.dynamic(Direction.kForward));
+    SmartDashboard.putData("dynamic backward",
+    routine.dynamic(Direction.kReverse));
   }
 
   @Log.NT

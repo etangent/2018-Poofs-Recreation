@@ -106,7 +106,10 @@ public class Elevator extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command fullExtend() {
-    return goTo(() -> MAX_HEIGHT.in(Meters)).until(this::atGoal).asProxy().withName("fully-extending");
+    return goTo(() -> MAX_HEIGHT.in(Meters))
+        .until(this::atGoal)
+        .asProxy()
+        .withName("fully-extending");
   }
 
   public Command goTo(DoubleSupplier position) {

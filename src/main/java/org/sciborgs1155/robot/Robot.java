@@ -110,7 +110,10 @@ public class Robot extends CommandRobot implements Logged {
             InputStream.of(operator::getLeftY).deadband(Constants.DEADBAND, 1)));
     intake.setDefaultCommand(
         new DeferredCommand(
-                () -> intake.hasCube() ? intake.clamp().alongWith(intake.stop()) : intake.tighten().alongWith(intake.stop()),
+                () ->
+                    intake.hasCube()
+                        ? intake.clamp().alongWith(intake.stop())
+                        : intake.tighten().alongWith(intake.stop()),
                 Set.of(intake))
             .withName("intake default"));
     wrist.setDefaultCommand(wrist.hold());

@@ -1,9 +1,14 @@
 package org.sciborgs1155.robot.drive;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 
 public class NoDrive implements DriveIO {
-  private final Rotation2d none = new Rotation2d();
+  private final Rotation2d noRot = new Rotation2d();
+  private final Measure<Voltage> noVolts = Volts.of(0);
 
   @Override
   public void setVoltages(double leftVoltage, double rightVoltage) {}
@@ -29,8 +34,18 @@ public class NoDrive implements DriveIO {
   }
 
   @Override
+  public Measure<Voltage> getLeftVoltage() {
+    return noVolts;
+  }
+
+  @Override
+  public Measure<Voltage> getRightVoltage() {
+    return noVolts;
+  }
+
+  @Override
   public Rotation2d getHeading() {
-    return none;
+    return noRot;
   }
 
   @Override

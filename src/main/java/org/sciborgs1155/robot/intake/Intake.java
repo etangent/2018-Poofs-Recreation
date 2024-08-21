@@ -34,9 +34,7 @@ public class Intake extends SubsystemBase implements Logged, AutoCloseable {
   }
 
   public Command drop() {
-    return open()
-    .until(() -> !hasCube())
-    .andThen(tighten());
+    return open().until(() -> !hasCube()).andThen(tighten());
   }
 
   // I may do more stuff with this

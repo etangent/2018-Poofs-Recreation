@@ -1,6 +1,7 @@
 package org.sciborgs1155.robot.drive;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Volts;
 import static org.sciborgs1155.robot.Ports.Drive.*;
 import static org.sciborgs1155.robot.drive.DriveConstants.Drivetrain.WHEEL_RADIUS;
 
@@ -10,7 +11,10 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import java.util.Arrays;
 
@@ -82,6 +86,16 @@ public class RealDrive implements DriveIO {
   @Override
   public double getLeftVelocity() {
     return leftLeader.getVelocity().getValueAsDouble() * WHEEL_RADIUS.in(Meters) * 2 * Math.PI;
+  }
+
+  @Override
+  public Measure<Voltage> getLeftVoltage() {
+    return Volts.of(leftLeader.get() * RobotController.getBatteryVoltage());
+  }
+
+  @Override
+  public Measure<Voltage> getRightVoltage() {
+    return Volts.of(rightLeader.get() * RobotController.getBatteryVoltage());
   }
 
   @Override

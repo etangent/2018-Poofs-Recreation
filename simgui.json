@@ -27,6 +27,10 @@
       "/SmartDashboard/drive dynamic forward": "Command",
       "/SmartDashboard/drive quasistatic backward": "Command",
       "/SmartDashboard/drive quasistatic forward": "Command",
+      "/SmartDashboard/dynamic backward": "Command",
+      "/SmartDashboard/dynamic forward": "Command",
+      "/SmartDashboard/quasistatic backward": "Command",
+      "/SmartDashboard/quasistatic forward": "Command",
       "/SmartDashboard/turn dynamic backward": "Command",
       "/SmartDashboard/turn dynamic forward": "Command",
       "/SmartDashboard/turn quasistatic backward": "Command",
@@ -39,6 +43,11 @@
         }
       },
       "/Robot/drive/field2d": {
+        "Robot": {
+          "length": 0.699999988079071,
+          "weight": 2.0,
+          "width": 0.5799999833106995
+        },
         "bottom": 370,
         "builtin": "2018 Power Up",
         "height": 8.229599952697754,
@@ -62,12 +71,22 @@
           "visible": true
         }
       },
-      "/Robot/elevator/measurementVisualizer": {
+      "/SmartDashboard/dynamic backward": {
         "window": {
           "visible": true
         }
       },
-      "/Robot/wrist/measurementVisualizer": {
+      "/SmartDashboard/dynamic forward": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/quasistatic backward": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/quasistatic forward": {
         "window": {
           "visible": true
         }
@@ -163,7 +182,8 @@
         }
       ],
       "window": {
-        "name": "wrist"
+        "name": "wrist",
+        "visible": false
       }
     },
     "Plot <1>": {
