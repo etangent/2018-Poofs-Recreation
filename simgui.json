@@ -19,6 +19,7 @@
       "/Robot/drive/rearLeft/turnFeedback": "PIDController",
       "/Robot/drive/rearRight/driveFeedback": "PIDController",
       "/Robot/drive/rearRight/turnFeedback": "PIDController",
+      "/Robot/drive/turnFeedback": "PIDController",
       "/Robot/elevator/measurementVisualizer": "Mechanism2d",
       "/Robot/elevator/setPointVisualizer": "Mechanism2d",
       "/Robot/wrist/measurementVisualizer": "Mechanism2d",
@@ -97,6 +98,12 @@
     "transitory": {
       "Robot": {
         "drive": {
+          "ChassisSpeeds##v_/Robot/drive/chassisSpeeds": {
+            "open": true
+          },
+          "ChassisSpeeds##v_/Robot/drive/rotational setpoint": {
+            "open": true
+          },
           "DifferentialDriveWheelSpeeds##v_/Robot/drive/wheelSpeedSetpoints": {
             "open": true
           },
@@ -110,6 +117,9 @@
             "open": true
           },
           "Pose2d##v_/Robot/drive/pose": {
+            "Rotation2d##v_rotation": {
+              "open": true
+            },
             "Translation2d##v_translation": {
               "open": true
             },
@@ -130,7 +140,10 @@
             },
             "open": true
           },
-          "open": true
+          "open": true,
+          "turnFeedback": {
+            "open": true
+          }
         },
         "open": true
       }
@@ -274,8 +287,22 @@
         }
       ],
       "window": {
-        "name": "drive"
+        "name": "drive",
+        "visible": false
       }
+    },
+    "Plot <3>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 332
+        }
+      ]
     }
   }
 }

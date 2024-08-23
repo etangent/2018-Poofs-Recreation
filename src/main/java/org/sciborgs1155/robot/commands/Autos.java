@@ -6,6 +6,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,11 +21,12 @@ import org.sciborgs1155.robot.wrist.Wrist;
 public final class Autos {
   public static SendableChooser<Command> configureAutos(
       Drive drive, Elevator elevator, Wrist wrist, Intake intake) {
-    AutoBuilder.configureRamsete(
+    AutoBuilder.configureLTV(
         drive::pose,
         drive::resetPose,
         drive::chassisSpeeds,
         drive::setChassisSpeeds,
+        .02,
         new ReplanningConfig(),
         () -> alliance() == Alliance.Red,
         drive);
