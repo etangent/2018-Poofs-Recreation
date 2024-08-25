@@ -6,7 +6,6 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;

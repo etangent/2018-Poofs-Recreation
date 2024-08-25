@@ -44,8 +44,7 @@ public class SimElevator implements ElevatorIO {
 
   // unnecessary
   @Override
-  public void shiftGear(boolean high) {
-  }
+  public void shiftGear(boolean high) {}
 
   @Override
   public boolean atLimitSwitch() {

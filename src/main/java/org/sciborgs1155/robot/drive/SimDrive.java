@@ -21,7 +21,7 @@ import org.sciborgs1155.robot.Constants;
 public class SimDrive implements DriveIO {
   private final DifferentialDrivetrainSim drive;
   private Measure<Voltage> leftInput = Volts.of(0);
-  private Measure<Voltage> rightInput = Volts.of(0);  
+  private Measure<Voltage> rightInput = Volts.of(0);
 
   public SimDrive() {
     drive =
